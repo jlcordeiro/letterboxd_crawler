@@ -22,13 +22,13 @@ class Profiles:
         with self.lock_:
             if p not in self.profiles_:
                 self.queue_.put(p)
-                self.profiles_[p]            = None
+                self.profiles_[p]            = []
                 self.total_profiles_         += 1
                 self.profiles_left_to_parse_ += 1
 
     def update(self, p, following):
         with self.lock_:
-            self.profiles_[p] = following
+            self.profiles_[p].extend(following)
             #print("{}: {}".format(p, following))
 
     def next(self):
@@ -45,7 +45,9 @@ class Profiles:
     def show(self):
         with self.lock_:
             for k in self.profiles_:
-                print("{}: {}".format(k, self.profiles_[k]))
+                if (self.profiles_[k]):
+                    print("{}: {}".format(k, self.profiles_[k]))
+        print("-----------------------------")
 
 
 def crawl_network(profiles, source_profile):
@@ -54,11 +56,9 @@ def crawl_network(profiles, source_profile):
     # note: this gets changed inside the loop
     page_next = source_profile + "/following/page/1"
 
-    following = []
-
     while True:
         watchlist_url = base_url + page_next
-        print(watchlist_url)
+        #print(watchlist_url)
 
         # Get first page, gather general data
         s = session()
@@ -66,9 +66,15 @@ def crawl_network(profiles, source_profile):
         soup = BeautifulSoup(r.text, "html.parser")
         table = soup.find("person-table")
         table = soup.find_all("td", attrs={"class": "table-person"})
+
+        following = []
         for person in table:
             username = person.find("a", href=True)["href"][1 : -1]
             following.append(username)
+
+        profiles.update(source_profile, following)
+        for f in following:
+            profiles.add(f)
 
         pagination = soup.find_all("div", attrs={"class": "paginate-nextprev"})
         if len(pagination) is 0:
@@ -80,24 +86,20 @@ def crawl_network(profiles, source_profile):
 
         page_next = pagination["href"][1:]
 
-    profiles.update(source_profile, following)
-    for f in following:
-        profiles.add(f)
-
 stop = False
 
 class LbThread (threading.Thread):
     def __init__(self, profiles):
         threading.Thread.__init__(self)
-        self.profiles_ = profiles
+        self.profiles = profiles
 
     def run(self):
         while stop is False:
-            n = self.profiles_.next()
+            n = self.profiles.next()
             if n is None:
                 time.sleep(.5)
             else:
-                crawl_network(self.profiles_, n)
+                crawl_network(self.profiles, n)
 
 
 def main(argv=None):
@@ -121,8 +123,9 @@ def main(argv=None):
 
     try:
         while True:
-            time.sleep(10)
+            time.sleep(1)
             profiles.peek()
+            profiles.show()
     except KeyboardInterrupt:
         stop = True
 
