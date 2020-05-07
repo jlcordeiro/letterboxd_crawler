@@ -8,8 +8,6 @@ from requests import session
 from bs4 import BeautifulSoup
 import threading
 
-base_url = "https://letterboxd.com/"
-
 class Profiles:
     def __init__(self):
         self.lock_                   = threading.Lock()
@@ -57,6 +55,7 @@ def crawl_network(profiles, source_profile):
     page_next = source_profile + "/following/page/1"
 
     while True:
+        base_url = "https://letterboxd.com/"
         watchlist_url = base_url + page_next
         #print(watchlist_url)
 
@@ -64,10 +63,11 @@ def crawl_network(profiles, source_profile):
         s = session()
         r = s.get(watchlist_url)
         soup = BeautifulSoup(r.text, "html.parser")
-        table = soup.find("person-table")
-        table = soup.find_all("td", attrs={"class": "table-person"})
 
         following = []
+
+        table = soup.find("person-table")
+        table = soup.find_all("td", attrs={"class": "table-person"})
         for person in table:
             username = person.find("a", href=True)["href"][1 : -1]
             following.append(username)
@@ -134,4 +134,5 @@ def main(argv=None):
     print ("Exiting Main Thread")
     profiles.show()
 
-main(sys.argv[1:])
+if __name__ == "__main__":
+    main(sys.argv[1:])
