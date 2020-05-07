@@ -49,15 +49,8 @@ class Profiles:
 
 
 def extract_following(soup):
-    following = []
-
-    table = soup.find("person-table")
     table = soup.find_all("td", attrs={"class": "table-person"})
-    for person in table:
-        username = person.find("a", href=True)["href"][1 : -1]
-        following.append(username)
-
-    return following
+    return [person.find("a", href=True)["href"][1 : -1] for person in table]
 
 def crawl_network(profiles, source_profile):
     profiles.add(source_profile)
