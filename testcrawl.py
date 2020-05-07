@@ -5,7 +5,10 @@ from bs4 import BeautifulSoup
 class Parse(unittest.TestCase):
     def setUp(self):
         def html_open(x):
-            return BeautifulSoup(open(x).read(), "html.parser")
+            f = open(x)
+            data = BeautifulSoup(f.read(), "html.parser")
+            f.close()
+            return data
 
         self.soup_jlcordeiro_following_1 = html_open("testdata/jlcordeiro_following_1.html")
         self.soup_jlcordeiro_following_2 = html_open("testdata/jlcordeiro_following_2.html")
