@@ -48,6 +48,17 @@ class Profiles:
         print("-----------------------------")
 
 
+def extract_following(soup):
+    following = []
+
+    table = soup.find("person-table")
+    table = soup.find_all("td", attrs={"class": "table-person"})
+    for person in table:
+        username = person.find("a", href=True)["href"][1 : -1]
+        following.append(username)
+
+    return following
+
 def crawl_network(profiles, source_profile):
     profiles.add(source_profile)
 
@@ -64,14 +75,7 @@ def crawl_network(profiles, source_profile):
         r = s.get(watchlist_url)
         soup = BeautifulSoup(r.text, "html.parser")
 
-        following = []
-
-        table = soup.find("person-table")
-        table = soup.find_all("td", attrs={"class": "table-person"})
-        for person in table:
-            username = person.find("a", href=True)["href"][1 : -1]
-            following.append(username)
-
+        following = extract_following(soup)
         profiles.update(source_profile, following)
         for f in following:
             profiles.add(f)

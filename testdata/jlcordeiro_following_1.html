@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6 lte9 lte8 lte7 lte6 no-js"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7 lte9 lte8 lte7 no-js"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8 lte9 lte8 no-js"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9 lte9 no-js"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html id="html" lang="en" class="no-mobile no-js"> <!--<![endif]-->
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=1024" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="description" content="Joao Cordeiro’s friends" />
+	<meta property="og:url" content="https://letterboxd.com/jlcordeiro/following/" />
+	<meta property="og:title" content="Joao Cordeiro’s friends" />
+	<meta property="og:description" content="Joao Cordeiro’s friends" />
+	<meta property="og:image" content="https://s.ltrbxd.com/static/img/default-share.353d0414.png" />
+	<meta name="application-name" content="Letterboxd" />
+	<meta name="theme-color" content="#445566" />
+	<meta name="msapplication-TileColor" content="#445566" />
+	<meta name="apple-itunes-app" content="app-id=1054271011, affiliate-data=11l5KW, app-argument=https://letterboxd.com/jlcordeiro/following/" />
+	<meta name="mobile-web-app-capable" content="yes">
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-25658265-1', {
+	   		'cookieDomain': 'letterboxd.com',
+	   		'legacyCookieDomain': 'letterboxd.com'
+		});
+		ga('set', 'dimension1', 'Visitor');
+		ga('set', 'dimension3', '/object/person/friends');
+		ga('require', 'GTM-TB8HSDN');
+		ga('send', 'pageview');
+	</script>
+	<script>
+		var isMobile = false,
+			isMobileOptimised = true,
+			renderMobile = false,
+			useStaticFonts = false,
+			disableFrameProtection = false;
+	</script>
+	<title>&lrm;Joao Cordeiro’s friends &bull; Letterboxd</title>
+	<link type="text/plain" rel="author" href="/humans.txt" />
+	<link rel="mask-icon" href="https://s.ltrbxd.com/static/img/icons/letterboxd-decal-l-16px.61eab1e3.svg" color="#445566" />
+	<link rel="shortcut icon" sizes="196x196" href="https://s.ltrbxd.com/static/img/icons/touch-icon-192x192.4ccd4e0e.png" />
+	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="search" type="application/opensearchdescription+xml" title="Letterboxd" href="/static/opensearch.xml" />
+	<!--[if lte IE 9 ]>
+		<link href="https://s.ltrbxd.com/static/css/ie9-1.min.50ce2b91.css" rel="stylesheet" media="screen, projection"/>
+		<link href="https://s.ltrbxd.com/static/css/ie9-2.min.45ceb925.css" rel="stylesheet" media="screen, projection"/>
+	<![endif]-->
+	<!--[if (gt IE 9)|!(IE)]><!-->
+		<link href="https://s.ltrbxd.com/static/css/main.min.9f18398d.css" rel="stylesheet" media="screen, projection"/>
+	<!--<![endif]-->
+	<!--[if lte IE 6]><script>location.replace("/errors/ie6");</script><![endif]-->
+	<!--[if IE 7]><script>location.replace("/errors/ie7");</script><![endif]-->
+	<!--[if IE 8]><script>location.replace("/errors/ie8");</script><![endif]-->
+	<!--[if IE 9]><script>location.replace("/errors/ie9");</script><![endif]-->
+	<link href="https://s.ltrbxd.com/static/css/desktop.min.194b6e10.css" rel="stylesheet" media="screen, projection"/>
+	<script>
+		var baseURL = "";
+		var successMessages = [];
+		var errorMessages = [];
+		var stickyMessages = [];
+		var globals = {
+			autoAddFilm: false			
+			, spinners: {
+				ajax_242d35: 'https://s.ltrbxd.com/static/img/spinner-dark-2x.a4d37b5a.gif',
+				spinner_12_2C3641: 'https://s.ltrbxd.com/static/img/spinner-dark-2x.a4d37b5a.gif',
+				spinner_14_20272f: 'https://s.ltrbxd.com/static/img/spinner-dark-2x.a4d37b5a.gif',
+				spinner_16_161B21: 'https://s.ltrbxd.com/static/img/spinner-dark-2x.a4d37b5a.gif'
+			}
+		};
+		var supermodelCSRF = "";
+		var gRecaptchaKey = '6Le3mMIUAAAAAEXbwZ7M1R5jEv0V5xbvj7bgXq2g';
+		var person = {
+			username: ""
+			, loggedIn: false
+			, showAds: true
+			, role: "guest"
+			, hasExtendedServiceFilters: false
+			, canBulkAddToLists: false
+			, blockedMembers: []
+			, validated: null
+			, hasBlocked : function(member) { for (var i = 0; i !== person.blockedMembers.length; i++) {if (person.blockedMembers[i] === member) return true;} return false; }
+			, viewingTags: []
+			, hasMoreTags: true
+		};
+		supermodelCSRF = "bb64f20c523516513a60";
+			if ( screen.width < 768 ) {
+				var date = new Date();
+				var maxAge = 365 * 24 * 60 * 60;
+				date.setTime(date.getTime() + maxAge * 1000);
+				var expires = '; expires=' + date.toUTCString();
+				document.cookie = "useMobileSite=yes" + expires + "; path=/; maxAge=" + maxAge;
+				if ( document.cookie && document.cookie.indexOf("useMobileSite=yes") >= 0 ) {
+					window.location.reload(true);
+				} else {
+					// No cookies.  No Mobile version.
+				}
+			}
+		var isWindows = navigator.platform.toUpperCase().indexOf('WIN') >= 0; // Detect windows platform
+		if (isWindows) { document.documentElement.classList.add('is-windows'); }
+	</script>
+	<script src="https://s.ltrbxd.com/static/js/main.min.bd60ae84.js"></script>
+	<script>
+		if ( $.cookie("letterboxd.admin.signed.in") === person.username ) {
+			successMessages.push("You are signed in as " + person.username);
+			$(function(){$("#header, #content, body").css("background","#543");});
+		}
+	</script>
+	<script src="https://cdn.adligature.com/lbx/prod/rules.js" id="AdvallyRules" data-targeting="tags="></script>
+</head>
+<body class="following">
+<script>
+var mainMenu = [];
+	mainMenu.push({
+		"id": 1,
+		"url": "/sign-in/", 
+		"name": "Sign In",
+		"cssClassCode": "sign-in-menu",
+		"hideWhenSignedIn": true,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": true,
+		"selected": false
+	});
+	mainMenu.push({
+		"id": 2,
+		"url": "/create-account/", 
+		"name": "Create Account",
+		"cssClassCode": "create-account-menu",
+		"hideWhenSignedIn": true,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"selected": false
+	});
+	mainMenu.push({
+		"id": 3,
+		"url": "/", 
+		"name": "Home",
+		"cssClassCode": "person-home",
+		"hideWhenSignedIn": true,
+		"hideWhenNotSignedIn": true,
+		"showInMainNavForMobile": false,
+		"selected": false
+	});
+	mainMenu.push({
+		"id": 4,
+		"url": "/activity/", 
+		"name": "Activity",
+		"cssClassCode": "main-nav-activity",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": true,
+		"showInMainNavForMobile": false,
+		"selected": false
+	});
+	mainMenu.push({
+		"id": 5,
+		"url": "/films/", 
+		"name": "Films",
+		"cssClassCode": "films-page main-nav-films",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"selected": false
+	});
+	mainMenu.push({
+		"id": 6,
+		"url": "/lists/", 
+		"name": "Lists",
+		"cssClassCode": "lists-page main-nav-lists",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"selected": false
+	});
+	mainMenu.push({
+		"id": 7,
+		"url": "/people/", 
+		"name": "People",
+		"cssClassCode": "main-nav-people",
+		"hideWhenSignedIn": false,
+		"hideWhenNotSignedIn": false,
+		"showInMainNavForMobile": false,
+		"selected": false
+	});
+	mainMenu.push({
+		"id": 8,
+		"url": "/search/", 
+		"name": "Search results",
+		"cssClassCode": "",
+		"hideWhenSignedIn": true,
+		"hideWhenNotSignedIn": true,
+		"showInMainNavForMobile": false,
+		"selected": false
+	});
+</script>
+<header class="site-header js-hide-in-app" id="header">
+	<div class="site-header-bg"></div>
+	<section>
+		<h1 class="site-logo"><a href="/" class="logo replace">Letterboxd &mdash; Your life in film</a></h1>
+		<div class="react-component" data-component-class="globals.comps.NavComponent"></div>
+<form method="post" action="#" id="signin" class="signin signin-form js-header-signin-form js-signin" data-url="/user/login.do" novalidate='novalidate' autocorrect='off' autocapitalize='off'><input type="hidden" name="__csrf" value="bb64f20c523516513a60" />
+	<fieldset class="fieldset">
+		<div class="fields">
+			<div class="col">
+				<label for="username">Username or Email</label>
+				<input type="email" name="username" id="username" class="field signin-field" tabindex="1" data-focus-control="signingIn" autocomplete='email' value="" />
+			</div>
+			<div class="col">
+				<label for="password">Password</label>
+				<input type="password" name="password" id="password" class="field signin-field" tabindex="2" autocomplete='current-password' value="" />
+			</div>
+			<div class="signin-actions">
+				<label for="remember" class="option-label -checkbox -small">
+					<input type="checkbox" name="remember" id="remember" class="checkbox" tabindex="3" value="true" /><i class="substitute"></i>
+					<span class="focus">Remember<span class="mob-hide"> me</span></span>
+				</label>
+				<p class="reset" tabindex="5"><a class="reset-password-link" href="/user/request-password-reset" target="_top">Forgotten<span class="elongated"> password</span>?</a></p>
+			</div>
+			<div class="col buttons">
+				<div class="button-container"><input type="submit" value="Sign in" class="button -action button-green" tabindex="4" /><i></i></div>
+				<div class="close js-close-signin">&times;</div>
+			</div>
+		</div>
+	</fieldset>
+	<div id="signin-message" class="errormessage"></div>
+</form>
+		<form id="search" class="js-search-form search-form" action="/search/" method="get">
+			<fieldset>
+				<label for="search-q" class="hidden">Search:</label>
+				<input type="text" name="q" id="search-q" class="field -borderless" data-lpignore='true' value="" />
+				<input type="submit" value="Search" class="action" />
+			</fieldset>
+		</form>
+	</section>
+</header>
+<div id="content" class="site-body">
+	<div class="content-wrap">
+<section id="profile-header" data-person="jlcordeiro">
+	<section id="profile-nav" class="profile-nav-mini">
+		<nav>
+				<div class="profile-mini-person">
+					<a class="avatar -a24" href="/jlcordeiro/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/4/6/4/3/1/shard/http___pbs.twimg.com_profile_images_796269536806924289_NtywDXUT-0-48-0-48-crop.jpg?k=033e67227a" alt="Joao Cordeiro" width="24" height="24" /> </a>
+					<h1 class="title-3"><a href="/jlcordeiro/">Joao Cordeiro</a></h1>
+				</div>
+			<ul>
+				<li class="hide-for-owner" data-owner="jlcordeiro"><a href="/jlcordeiro/activity/">Activity</a></li>
+				<li class="show-for-owner" data-owner="jlcordeiro"><a href="/activity/">Activity</a></li>
+				<li><a href="/jlcordeiro/films/">Films</a></li>
+				<li><a href="/jlcordeiro/films/diary/">Diary</a></li>
+				<li><a href="/jlcordeiro/films/reviews/">Reviews</a></li>
+				<li class="" data-owner="jlcordeiro"><a href="/jlcordeiro/watchlist/" >Watchlist</a></li>
+				<li><a href="/jlcordeiro/lists/">Lists</a></li>
+				<li><a href="/jlcordeiro/likes/">Likes</a></li>
+				<li><a href="/jlcordeiro/tags/">Tags</a></li>
+				<li class="selected"><a href="/jlcordeiro/following/">Network</a></li>
+			</ul>
+		</nav>
+		<a href="/jlcordeiro/rss/" class="has-icon icon-16 icon-rss tooltip" title="RSS feed">RSS feed for Joao</a>
+	</section>
+</section>
+<div class="cols-2">
+	<section class="section col-17 col-main">
+		<div id="content-nav" class="tabbed gapless">
+			<section class="sub-nav-wrapper">
+				<ul class="sub-nav">
+					<li class="selected">
+						<a href="/jlcordeiro/following/" class="tooltip" title="26&nbsp;people">Following</a>
+					</li>
+					<li>
+						<a href="/jlcordeiro/followers/" class="tooltip" title="25&nbsp;people">Followers</a>
+					</li>
+				</ul>
+			</section>
+		</div>
+		<table class="person-table">
+				<thead>
+					<tr>
+						<th class="left-th">Name</th>
+								<th>Watched</th>
+								<th>Lists</th>
+								<th>Likes</th>
+						<th class="hide-when-logged-out"></th>
+					</tr>
+				</thead>
+			<tbody>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/dunkeey/" > <img src="https://secure.gravatar.com/avatar/f09f3d539ebc0a1338536d27a3713e34?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="Duncan Streuderst" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/dunkeey/" class="name"> Duncan Streuderst </a> </h3> <small class="metadata"> <a href="/dunkeey/followers/" class="_nobr">292&nbsp;followers</a>, <a href="/dunkeey/following/" class="_nobr">following 520</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/dunkeey/films/">808</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/dunkeey/lists/">10</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/dunkeey/likes/">51</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="dunkeey" data-profile="false">
+			<a href="#" data-action="/dunkeey/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/dunkeey/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/gonfsilva/" > <img src="https://secure.gravatar.com/avatar/922686eaf2e476dce81310ab25a3b0f5?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="Gonçalo Silva" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/gonfsilva/" class="name"> Gonçalo Silva </a> </h3> <small class="metadata"> <a href="/gonfsilva/followers/" class="_nobr">11&nbsp;followers</a>, <a href="/gonfsilva/following/" class="_nobr">following 7</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/gonfsilva/films/">681</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/gonfsilva/lists/">3</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/gonfsilva/likes/">221</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="gonfsilva" data-profile="false">
+			<a href="#" data-action="/gonfsilva/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/gonfsilva/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/crispim/" > <img src="https://secure.gravatar.com/avatar/b6fc17a76273806ab344495afecbf7e4?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="Pedro Crispim" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/crispim/" class="name"> Pedro Crispim </a> </h3> <small class="metadata"> <a href="/crispim/followers/" class="_nobr">83&nbsp;followers</a>, <a href="/crispim/following/" class="_nobr">following 23</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/crispim/films/">3,414</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/crispim/lists/">89</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/crispim/likes/">77</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="Crispim" data-profile="false">
+			<a href="#" data-action="/crispim/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/crispim/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/inesqsc/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/2/7/3/7/0/3/shard/http___pbs.twimg.com_profile_images_1180613830784815104_5ISbu_c2-0-80-0-80-crop.jpg?k=cce042d9e2" alt="ines" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/inesqsc/" class="name"> ines </a> </h3> <small class="metadata"> <a href="/inesqsc/followers/" class="_nobr">327&nbsp;followers</a>, <a href="/inesqsc/following/" class="_nobr">following 251</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/inesqsc/films/">866</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/inesqsc/lists/">12</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/inesqsc/likes/">3,703</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="inesqsc" data-profile="false">
+			<a href="#" data-action="/inesqsc/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/inesqsc/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/nihilism/" > <img src="https://secure.gravatar.com/avatar/671b6424609e25af5f1018bee4d63001?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="nihilism" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/nihilism/" class="name"> nihilism </a> </h3> <small class="metadata"> <a href="/nihilism/followers/" class="_nobr">2,777&nbsp;followers</a>, <a href="/nihilism/following/" class="_nobr">following 1,386</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/nihilism/films/">802</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/nihilism/lists/">0</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/nihilism/likes/">76</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="nihilism" data-profile="false">
+			<a href="#" data-action="/nihilism/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/nihilism/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/carsonkims/" > <img src="https://secure.gravatar.com/avatar/4719281fe8e210f11ad26efebaced178?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="Carson Kim" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/carsonkims/" class="name"> Carson Kim </a> </h3> <small class="metadata"> <a href="/carsonkims/followers/" class="_nobr">9,002&nbsp;followers</a>, <a href="/carsonkims/following/" class="_nobr">following 26,593</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/carsonkims/films/">59</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/carsonkims/lists/">3</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/carsonkims/likes/">54</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="CarsonKimS" data-profile="false">
+			<a href="#" data-action="/carsonkims/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/carsonkims/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/o_serkan_o/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/1/5/9/1/4/4/7/shard/http___pbs.twimg.com_profile_images_1244456176265367557_NNhm8OQV-0-80-0-80-crop.jpg?k=4538b9a1dd" alt="O_SeRKaN_O" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/o_serkan_o/" class="name"> O_SeRKaN_O </a> </h3> <small class="metadata"> <a href="/o_serkan_o/followers/" class="_nobr">14,247&nbsp;followers</a>, <a href="/o_serkan_o/following/" class="_nobr">following 50,189</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/o_serkan_o/films/">1,892</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/o_serkan_o/lists/">24</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/o_serkan_o/likes/">493</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="O_SeRKaN_O" data-profile="false">
+			<a href="#" data-action="/o_serkan_o/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/o_serkan_o/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/davidehrlich/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/3/2/1/9/2/shard/http___pbs.twimg.com_profile_images_1015061849321164801_S527QFnk-0-80-0-80-crop.jpg?k=257bf63c9d" alt="davidehrlich" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/davidehrlich/" class="name"> davidehrlich </a> </h3> <small class="metadata"> <a href="/davidehrlich/followers/" class="_nobr">68,482&nbsp;followers</a>, <a href="/davidehrlich/following/" class="_nobr">following 41</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/davidehrlich/films/">1,996</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/davidehrlich/lists/">41</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/davidehrlich/likes/">72</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="davidehrlich" data-profile="false">
+			<a href="#" data-action="/davidehrlich/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/davidehrlich/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/carolina_ab/" > <img src="https://secure.gravatar.com/avatar/76682c7e0bbe1b513b518cf47a1b6968?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="Carolina Abreu" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/carolina_ab/" class="name"> Carolina Abreu </a> </h3> <small class="metadata"> <a href="/carolina_ab/followers/" class="_nobr">11&nbsp;followers</a>, <a href="/carolina_ab/following/" class="_nobr">following 21</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/carolina_ab/films/">279</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/carolina_ab/lists/">3</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/carolina_ab/likes/">119</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="carolina_ab" data-profile="false">
+			<a href="#" data-action="/carolina_ab/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/carolina_ab/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/nunoabreu/" > <img src="https://secure.gravatar.com/avatar/345f694e5d0063b8a2dec9d8828f6330?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="nunoabreu" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/nunoabreu/" class="name"> nunoabreu </a> </h3> <small class="metadata"> <a href="/nunoabreu/followers/" class="_nobr">3&nbsp;followers</a>, <a href="/nunoabreu/following/" class="_nobr">following 3</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/nunoabreu/films/">3</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/nunoabreu/lists/">0</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/nunoabreu/likes/">1</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="nunoabreu" data-profile="false">
+			<a href="#" data-action="/nunoabreu/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/nunoabreu/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/boppitybunny/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/2/6/1/8/8/0/shard/http___pbs.twimg.com_profile_images_1079273043757797378_nUWaCfvM-0-80-0-80-crop.jpg?k=12b86e9374" alt="moon ... 🌟" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/boppitybunny/" class="name"> moon ... 🌟 </a> </h3> <small class="metadata"> <a href="/boppitybunny/followers/" class="_nobr">98&nbsp;followers</a>, <a href="/boppitybunny/following/" class="_nobr">following 91</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/boppitybunny/films/">529</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/boppitybunny/lists/">2</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/boppitybunny/likes/">692</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="boppitybunny" data-profile="false">
+			<a href="#" data-action="/boppitybunny/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/boppitybunny/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/apeloeh/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/8/4/6/7/2/shard/http___pbs.twimg.com_profile_images_483326743785115648_kqg4mYbW-0-80-0-80-crop.jpg?k=a300dc2a24" alt="apeloeh" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/apeloeh/" class="name"> apeloeh </a> </h3> <small class="metadata"> <a href="/apeloeh/followers/" class="_nobr">104&nbsp;followers</a>, <a href="/apeloeh/following/" class="_nobr">following 166</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/apeloeh/films/">1,203</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/apeloeh/lists/">43</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/apeloeh/likes/">1,056</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="apeloeh" data-profile="false">
+			<a href="#" data-action="/apeloeh/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/apeloeh/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/wonderfulcinema/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/1/0/1/0/8/8/shard/http___pbs.twimg.com_profile_images_1798808563_wcl_original2-0-80-0-80-crop.jpg?k=4881340b3f" alt="Wonderful Cinema" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/wonderfulcinema/" class="name"> Wonderful Cinema </a> </h3> <small class="metadata"> <a href="/wonderfulcinema/followers/" class="_nobr">4,149&nbsp;followers</a>, <a href="/wonderfulcinema/following/" class="_nobr">following 31,212</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/wonderfulcinema/films/">128</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/wonderfulcinema/lists/">2</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/wonderfulcinema/likes/">126</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="WonderfulCinema" data-profile="false">
+			<a href="#" data-action="/wonderfulcinema/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/wonderfulcinema/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/followtheblind/" > <img src="https://secure.gravatar.com/avatar/cb8cef25ac0114e7e47f5a94b296bb92?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="Tentin Quarantino" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/followtheblind/" class="name"> Tentin Quarantino </a> </h3> <small class="metadata"> <a href="/followtheblind/followers/" class="_nobr">2,964&nbsp;followers</a>, <a href="/followtheblind/following/" class="_nobr">following 3,770</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/followtheblind/films/">2,489</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/followtheblind/lists/">43</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/followtheblind/likes/">4,822</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="followtheblind" data-profile="false">
+			<a href="#" data-action="/followtheblind/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/followtheblind/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/jkottke/" > <img src="https://a.ltrbxd.com/resized/avatar/2618/http___a3.twimg.com_profile_images_28727752_jkottke_headshot3-0-80-0-80-crop.jpg?k=28d434d960" alt="Jason Kottke" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/jkottke/" class="name"> Jason Kottke </a> </h3> <small class="metadata"> <a href="/jkottke/followers/" class="_nobr">831&nbsp;followers</a>, <a href="/jkottke/following/" class="_nobr">following 16</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/jkottke/films/">5</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/jkottke/lists/">0</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/jkottke/likes/">0</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="jkottke" data-profile="false">
+			<a href="#" data-action="/jkottke/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/jkottke/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/sandwich/" > <img src="https://a.ltrbxd.com/resized/avatar/411/http___a3.twimg.com_profile_images_559086400_dmitiri_110Nc_p9-0-80-0-80-crop.jpg?k=dbf652cd59" alt="Adam Lisagor" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/sandwich/" class="name"> Adam Lisagor </a> </h3> <small class="metadata"> <a href="/sandwich/followers/" class="_nobr">1,105&nbsp;followers</a>, <a href="/sandwich/following/" class="_nobr">following 21</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/sandwich/films/">27</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/sandwich/lists/">0</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/sandwich/likes/">19</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="sandwich" data-profile="false">
+			<a href="#" data-action="/sandwich/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/sandwich/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/khoi/" > <img src="https://a.ltrbxd.com/avatar/368/http___a0.twimg.com_profile_images_16896652_Adam_West.jpg?k=a3bec959f0" alt="Khoi Vinh" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/khoi/" class="name"> Khoi Vinh </a> </h3> <small class="metadata"> <a href="/khoi/followers/" class="_nobr">1,566&nbsp;followers</a>, <a href="/khoi/following/" class="_nobr">following 74</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/khoi/films/">959</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/khoi/lists/">16</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/khoi/likes/">177</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="khoi" data-profile="false">
+			<a href="#" data-action="/khoi/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/khoi/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/vishnevetsky/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/3/1/6/9/4/shard/http___a0.twimg.com_profile_images_1288700488_pic-0-80-0-80-crop.jpg?k=a5efca3fba" alt="I.V." width="40" height="40" /> </a> <h3 class="title-3"> <a href="/vishnevetsky/" class="name"> I.V. </a> </h3> <small class="metadata"> <a href="/vishnevetsky/followers/" class="_nobr">3,491&nbsp;followers</a>, <a href="/vishnevetsky/following/" class="_nobr">following 66</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/vishnevetsky/films/">3,904</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/vishnevetsky/lists/">5</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/vishnevetsky/likes/">549</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="Vishnevetsky" data-profile="false">
+			<a href="#" data-action="/vishnevetsky/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/vishnevetsky/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/dmoren/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/3/3/5/7/9/shard/http___a0.twimg.com_profile_images_51955128_dmoren3-0-80-0-80-crop.jpg?k=1c9494b45c" alt="Dan Moren" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/dmoren/" class="name"> Dan Moren </a> </h3> <small class="metadata"> <a href="/dmoren/followers/" class="_nobr">481&nbsp;followers</a>, <a href="/dmoren/following/" class="_nobr">following 8</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/dmoren/films/">83</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/dmoren/lists/">1</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/dmoren/likes/">6</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="dmoren" data-profile="false">
+			<a href="#" data-action="/dmoren/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/dmoren/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/pbones/" > <img src="https://a.ltrbxd.com/resized/avatar/5364/http___a1.twimg.com_profile_images_1599697388_new_avatar-0-80-0-80-crop.jpg?k=4d31611681" alt="Paul" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/pbones/" class="name"> Paul </a> </h3> <small class="metadata"> <a href="/pbones/followers/" class="_nobr">158&nbsp;followers</a>, <a href="/pbones/following/" class="_nobr">following 0</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/pbones/films/">4</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/pbones/lists/">0</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/pbones/likes/">0</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="PBones" data-profile="false">
+			<a href="#" data-action="/pbones/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/pbones/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/emanuel/" > <img src="https://a.ltrbxd.com/resized/avatar/3679/http___a3.twimg.com_profile_images_1585058870_Oct_12_100-0-80-0-80-crop.png?k=c4de6ed0ca" alt="Emanuel" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/emanuel/" class="name"> Emanuel </a> </h3> <small class="metadata"> <a href="/emanuel/followers/" class="_nobr">86&nbsp;followers</a>, <a href="/emanuel/following/" class="_nobr">following 45</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/emanuel/films/">38</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/emanuel/lists/">2</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/emanuel/likes/">13</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="Emanuel" data-profile="false">
+			<a href="#" data-action="/emanuel/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/emanuel/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/zkorpi/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/3/4/0/1/8/shard/http___a0.twimg.com_profile_images_2489561094_9pc3rv7tsz3nl7rvk7yj-0-80-0-80-crop.png?k=a6a7cfb376" alt="zkorpi" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/zkorpi/" class="name"> zkorpi </a> </h3> <small class="metadata"> <a href="/zkorpi/followers/" class="_nobr">42&nbsp;followers</a>, <a href="/zkorpi/following/" class="_nobr">following 6</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/zkorpi/films/">512</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/zkorpi/lists/">0</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/zkorpi/likes/">318</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="zkorpi" data-profile="false">
+			<a href="#" data-action="/zkorpi/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/zkorpi/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/inesdelgado/" > <img src="https://secure.gravatar.com/avatar/1dcea46ebfd5d4dc52007137f6721078?rating=PG&amp;size=80&amp;border=&amp;default=https%3A%2F%2Fletterboxd.com%2Fstatic%2Fimg%2Favatar80.5e92d567.png" alt="Ines Delgado" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/inesdelgado/" class="name"> Ines Delgado </a> </h3> <small class="metadata"> <a href="/inesdelgado/followers/" class="_nobr">13&nbsp;followers</a>, <a href="/inesdelgado/following/" class="_nobr">following 12</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/inesdelgado/films/">467</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/inesdelgado/lists/">0</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/inesdelgado/likes/">86</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="InesDelgado" data-profile="false">
+			<a href="#" data-action="/inesdelgado/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/inesdelgado/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/faitherina/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/3/3/9/3/5/shard/http___pbs.twimg.com_profile_images_654655864557563904_IrmxooMs-0-80-0-80-crop.jpg?k=32cd1916a8" alt="Faith Korpi Jannise" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/faitherina/" class="name"> Faith Korpi Jannise </a> </h3> <small class="metadata"> <a href="/faitherina/followers/" class="_nobr">438&nbsp;followers</a>, <a href="/faitherina/following/" class="_nobr">following 8</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/faitherina/films/">1,457</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/faitherina/lists/">3</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/faitherina/likes/">149</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="faitherina" data-profile="false">
+			<a href="#" data-action="/faitherina/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/faitherina/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+<tr>
+	<td class="table-person"><div class="person-summary"> <a class="avatar -a40" href="/mpmont/" > <img src="https://a.ltrbxd.com/resized/avatar/twitter/2/7/9/8/7/shard/http___pbs.twimg.com_profile_images_633347607927123968_BXyyxggh-0-80-0-80-crop.png?k=0608f92681" alt="Marco Monteiro" width="40" height="40" /> </a> <h3 class="title-3"> <a href="/mpmont/" class="name"> Marco Monteiro </a> </h3> <small class="metadata"> <a href="/mpmont/followers/" class="_nobr">84&nbsp;followers</a>, <a href="/mpmont/following/" class="_nobr">following 50</a> </small> </div></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-watched" href="/mpmont/films/">1,076</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-list" href="/mpmont/lists/">2</a></td>
+				<td class="table-stats"><a class="has-icon icon-16 icon-liked" href="/mpmont/likes/">318</a></td>
+	<td class="table-follow-status hide-when-logged-out">
+<div class="follow-button-wrapper" data-username="mpmont" data-profile="false">
+			<a href="#" data-action="/mpmont/unfollow/" class="ajax-click-action button -compact -following js-button-following"><span class="icon"></span><span class="button-text">Following</span></a>
+			<a href="#" data-action="/mpmont/follow/" data-recaptcha-action="follow" class="ajax-click-action button -compact -follow js-button-follow"><span class="icon"></span><span class="button-text">Follow</span></a>
+</div>
+</td>
+</tr>
+			</tbody>
+		</table>
+		<div class="pagination"> <div class="paginate-nextprev paginate-disabled"><span class="previous">Previous</span></div> <div class="paginate-nextprev"><a class="next" href="/jlcordeiro/following/page/2/">Next</a></div> </div>			
+	</section>
+	<aside class="sidebar" id="find-friends">
+<script id="script-bc0dc623-2452-4dd4-9053-e6543045729c">
+	(function() {
+		if (person.showAds) {
+			var code = renderMobile ? 2 : 1;
+			var modalContent = "<article><h1>Upgrade to remove ads</h1><p class='body-text -hero'>Letterboxd is an independent service created by a small team, and we rely mostly on the support of our members to maintain our site and apps. Please consider upgrading to a <a href='" + baseURL + "/pro/'>Pro account</a>—for less than a couple bucks a month, you’ll get cool additional features like all-time and annual stats pages (<a href='https://letterboxd.com/moulton/stats/'><u>example</u></a>), the ability to select (and filter by) your favorite streaming services, and no ads!</p><a href='" + baseURL + "/pro/' class='flat-button -action -uppercase button-action'>Tell me about Pro</a></article>";
+			var $div = $("<div />").attr("id", "div-gpt-ad-1529350096921-" + code).addClass("alig-div -nomargin -sidebar");
+			var $modal = $("<div />").attr("id", "alig-modal").addClass("modal signup-modal").html(modalContent);
+			var $a = $("<a />").attr("href", "#alig-modal").addClass("alig-hide -sidebar js-hide-in-app").html("Remove Ads <span>&times;</span>");
+			var $modalContainer = $("<div />").css("display", "none").html($modal);
+			$("#script-bc0dc623-2452-4dd4-9053-e6543045729c").after($div);
+			if (typeof googletag !== "undefined") {
+				googletag.cmd.push(function() {googletag.display("div-gpt-ad-1529350096921-" + code);});
+			}
+			$div.after($a).after($modalContainer);
+			$a.on("click", function(e) { e.preventDefault(); if (renderMobile) $(window).scrollTo(0); $(this).colorbox({inline: true, width: renderMobile ? "90%" : 520}); });
+		}
+	})();
+</script>
+	</aside>
+</div>
+		</div>
+	</div>
+	<footer class="page-footer js-page-footer js-hide-in-app">
+		<div class="content-wrap">
+				<nav class="footer-nav js-footer-nav">
+					<ul>
+						<li><a href="/about/">About</a></li>
+						<li><a href="https://news.letterboxd.com">News</a></li>
+						<li class="js-hide-in-app"><a href="/pro/">Pro</a></li>
+						<li><a href="/apps/">Apps</a></li>
+						<li><a href="/year-in-review/">Year in Review</a></li>
+						<li><a href="/gift-guide/">Gift Guide</a></li>
+						<li><a href="http://letterboxd.show" target="_blank">Podcast</a></li>
+						<li><a href="/welcome/">Help</a></li>
+						<li><a href="/legal/terms-of-use/">Terms</a></li>
+						<li><a href="/api-beta/">API</a></li>
+						<li><a href="/contact/">Contact</a></li>
+					</ul>
+				</nav>
+			<section class="social">
+				<span class="twitter"><a href="https://twitter.com/letterboxd" class="tooltip" title="Letterboxd on Twitter">Twitter</a></span>
+				<span class="facebook"><i class="slash"></i><a href="https://www.facebook.com/letterboxd" class="tooltip" title="Letterboxd on Facebook">Facebook</a></span>
+				<span class="instagram"><i class="slash"></i><a href="https://www.instagram.com/letterboxd" class="tooltip" title="Letterboxd on Instagram">Instagram</a></span>
+			</section>
+			<p class="copyright">
+				&copy; Letterboxd Limited. Made by <a href="/about/crew/" class="mute">fans</a> in Auckland, New Zealand. 
+				<span class="nobr"><a href="https://letterboxd.com/about/film-data/" class="mute">Film data</a> from <a href="https://www.themoviedb.org" class="mute">TMDb</a>. 
+						<a href="#" class="mute mobile-site-switch" data-use-mobile-site="yes">Mobile&nbsp;site</a>.
+	</span>
+				<span class="recap" style="display:none"><br/>This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" class="mute">privacy policy</a> and <a href="https://policies.google.com/terms" target="_blank" class="mute">terms of service</a>&nbsp;apply.</span>
+			</p>
+		</div>
+	</footer>
+	<div id="amzn-assoc-ad-005023c4-ceba-4708-8b0a-e9727b3931e9"></div><script async src="//z-na.amazon-adsystem.com/widgets/onejs?MarketPlace=US&adInstanceId=005023c4-ceba-4708-8b0a-e9727b3931e9"></script>
+</body>
+</html>
