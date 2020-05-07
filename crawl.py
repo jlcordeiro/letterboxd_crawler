@@ -52,13 +52,25 @@ def extract_following(soup):
     table = soup.find_all("td", attrs={"class": "table-person"})
     return [person.find("a", href=True)["href"][1 : -1] for person in table]
 
+
+def extract_next_page(soup):
+    pagination = soup.find_all("div", attrs={"class": "paginate-nextprev"})
+    if len(pagination) is 0:
+        return None
+
+    pagination = pagination[-1].find("a", href=True)
+    if pagination is None:
+        return None
+
+    return pagination["href"][1:]
+
 def crawl_network(profiles, source_profile):
     profiles.add(source_profile)
 
     # note: this gets changed inside the loop
     page_next = source_profile + "/following/page/1"
 
-    while True:
+    while page_next is not None:
         base_url = "https://letterboxd.com/"
         watchlist_url = base_url + page_next
         #print(watchlist_url)
@@ -69,19 +81,11 @@ def crawl_network(profiles, source_profile):
         soup = BeautifulSoup(r.text, "html.parser")
 
         following = extract_following(soup)
+        page_next = extract_next_page(soup)
+
         profiles.update(source_profile, following)
         for f in following:
             profiles.add(f)
-
-        pagination = soup.find_all("div", attrs={"class": "paginate-nextprev"})
-        if len(pagination) is 0:
-            break
-
-        pagination = pagination[-1].find("a", href=True)
-        if pagination is None:
-            break
-
-        page_next = pagination["href"][1:]
 
 stop = False
 

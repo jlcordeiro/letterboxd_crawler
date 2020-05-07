@@ -25,5 +25,12 @@ class Parse(unittest.TestCase):
         expected = ['siracusa']
         self.assertEqual(expected, crawl.extract_following(self.soup_jlcordeiro_following_2))
 
+    def test_get_next_page(self):
+        self.assertEqual("jlcordeiro/following/page/2/",
+                         crawl.extract_next_page(self.soup_jlcordeiro_following_1))
+
+        self.assertEqual(None,
+                         crawl.extract_next_page(self.soup_jlcordeiro_following_2))
+
 if __name__ == '__main__':
     unittest.main()
