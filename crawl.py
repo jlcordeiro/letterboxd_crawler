@@ -25,6 +25,19 @@ class Profiles:
         self.parsed_profiles   = set()
         self.queued_usernames  = set()
         self.ongoing_usernames = set()
+        self.keep_parsing      = True
+
+    def stop_parsing(self):
+        with self.lock_:
+            self.keep_parsing = False
+
+    def cancel_ongoing_jobs(self):
+        print("Moving ongoing jobs back to queued")
+        with self.lock_:
+            while len(self.ongoing_usernames):
+                cancelled_username = self.ongoing_usernames.pop()
+                print(cancelled_username)
+                self.queued_usernames.add(cancelled_username)
 
     def enqueue(self, username):
         with self.lock_:
@@ -76,6 +89,9 @@ def crawl_network(profiles, source_profile):
 
     following = []
     while page_next is not None:
+        if profiles.keep_parsing is False:
+            return
+
         base_url = "https://letterboxd.com/"
         r = s.get(base_url + page_next)
         soup = BeautifulSoup(r.text, "html.parser")
@@ -85,8 +101,6 @@ def crawl_network(profiles, source_profile):
 
     profiles.on_parsed(source_profile, following)
 
-stop = False
-
 class LbThread (threading.Thread):
     def __init__(self, profiles, thread_id):
         threading.Thread.__init__(self)
@@ -94,7 +108,7 @@ class LbThread (threading.Thread):
         self.thread_id = thread_id
 
     def run(self):
-        while stop is False:
+        while self.profiles.keep_parsing is True:
             n = self.profiles.next()
             if n is None:
                 time.sleep(.5)
@@ -126,10 +140,13 @@ def main(argv=None):
             time.sleep(1)
     except KeyboardInterrupt:
         print("ASKED TO STOP!!!")
-        stop = True
+        profiles.stop_parsing()
 
+    print("Waiting for ongoing threads")
     for t in threads:
        t.join()
+
+    profiles.cancel_ongoing_jobs()
     print ("Exiting Main Thread")
 
 if __name__ == "__main__":
