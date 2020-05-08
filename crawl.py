@@ -9,6 +9,10 @@ from bs4 import BeautifulSoup
 import threading
 
 class Profile:
+    """
+    Class that contains all the data relative to a
+    Letterboxd profile / account.
+    """
     def __init__(self, username, following = []):
         self.username  = username
         self.following = following
