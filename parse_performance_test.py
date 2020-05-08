@@ -45,35 +45,31 @@ def validate(expected, result):
         print("ok")
 
 if __name__ == "__main__":
-    def run_tests(filename):
-        with open(filename, 'r') as file:
-            data = file.read()
-
-        n_cycles = 5
-
-        print("== string scanning")
+    def run_tests(test_name, test_func, test_data, n_cycles, runs_per_cycle):
+        print("== ", test_name)
         absolute_start_time = datetime.now()
         for x in range(n_cycles):
             start_time = datetime.now()
-            for _ in range(100):
-                result = parse_strfind(data)
+            for _ in range(runs_per_cycle):
+                output = test_func(test_data)
 
             end_time = datetime.now()
             print('Test {}. Duration: {}'.format(x, end_time - start_time))
         print('Total. Duration: {}\n\n'.format(end_time - absolute_start_time))
 
+        return output
 
-        print("== BeautifulSoup")
-        absolute_start_time = datetime.now()
-        for x in range(n_cycles):
-            start_time = datetime.now()
-            for _ in range(100):
-                expected = parse_beautiful_soup(data)
 
-            end_time = datetime.now()
-            print('Test {}. Duration: {}'.format(x, end_time - start_time))
+    n_cycles = 5
+    n_runs   = 100
+
+    def compare_tests(filename):
+        with open(filename, 'r') as file:
+            data = file.read()
+
+        result = run_tests("string scanning", parse_strfind, data, n_cycles, n_runs)
+        expected = run_tests("BeautifulSoup", parse_beautiful_soup, data, n_cycles, n_runs)
         validate(expected, result)
-        print('Total. Duration: {}'.format(end_time - absolute_start_time))
 
-    run_tests("testdata/jlcordeiro_following_1.html")
-    run_tests("testdata/jlcordeiro_following_2.html")
+    compare_tests("testdata/jlcordeiro_following_1.html")
+    compare_tests("testdata/jlcordeiro_following_2.html")
