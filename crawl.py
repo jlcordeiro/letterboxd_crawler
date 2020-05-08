@@ -20,6 +20,15 @@ class Profile:
         return self.username == other.username
 
 class ProfileCrawler:
+    """
+    Class that wraps the logic behind crawling Letterboxd. Maintains
+    several sets of usernames / profiles:
+        - parsed profiles (profiles that have been fully parsed)
+        - ongoing profiles (actively being parsed)
+        - queued profiles (waiting for a free thread)
+
+    This class is thread-safe.
+    """
     def __init__(self):
         self.lock_             = threading.Lock()
         self.parsed_profiles   = set()
@@ -28,23 +37,42 @@ class ProfileCrawler:
         self.keep_parsing      = True
 
     def stop_parsing(self):
+        """ Flag to anyone using the crawler that they should stop. """
         with self.lock_:
             self.keep_parsing = False
 
     def cancel_ongoing_jobs(self):
-        print("Moving ongoing jobs back to queued")
+        """
+        Move all jobs / profiles being parsed back to the queue. Whatever
+        was already parsed is lost.
+        Should be used to guaranteed a return to a known state where
+        all profiles are either fully parsed or waiting to be picked up.
+        """
         with self.lock_:
             while len(self.ongoing_usernames):
                 cancelled_username = self.ongoing_usernames.pop()
-                print(cancelled_username)
                 self.queued_usernames.add(cancelled_username)
 
     def enqueue(self, username):
+        """
+        Adds a user name to the list of profiles to be queued and processed
+        later. If this profile has been parsed in the past, the method
+        will just ignore it silently.
+        """
         with self.lock_:
             if Profile(username) not in self.parsed_profiles:
                 self.queued_usernames.add(username)
 
     def on_parsed(self, username, following):
+        """
+        This method creates a profile with the details passed as parameter.
+        The profile is put on the list of parsed profiles and its
+        username is removed from the list of ongoing jobs.
+
+        Any other users that are seen in the details of this profiles
+        (following, follower, etc), if never seen before, are adding to the 
+        queue to be processed in the future.
+        """
         for f in following:
             self.enqueue(f)
 
@@ -52,11 +80,16 @@ class ProfileCrawler:
         with self.lock_:
             self.parsed_profiles.add(p)
             self.ongoing_usernames.discard(username)
-            print("{} parsed. {} ongoing. {} queued.".format(len(self.parsed_profiles),
-                                                             len(self.ongoing_usernames),
-                                                             len(self.queued_usernames)))
 
-    def next(self):
+    def next_job(self):
+        """
+        Get a "random" job out of the queue of profiles. If there are
+        no profiles waiting, returns None.
+
+        Warning: this profile is immediately removed from
+        queued and moved to ongoing, despite of whether or not
+        the client does something with it.
+        """
         with self.lock_:
             if len(self.queued_usernames) == 0:
                 return None
@@ -109,7 +142,7 @@ class LbThread (threading.Thread):
 
     def run(self):
         while self.profiles.keep_parsing is True:
-            n = self.profiles.next()
+            n = self.profiles.next_job()
             if n is None:
                 time.sleep(.5)
             else:
@@ -137,7 +170,10 @@ def main(argv=None):
 
     try:
         while True:
-            time.sleep(1)
+            time.sleep(10)
+            print("{} parsed. {} ongoing. {} queued.".format(len(crawler.parsed_profiles),
+                                                             len(crawler.ongoing_usernames),
+                                                             len(crawler.queued_usernames)))
     except KeyboardInterrupt:
         crawler.stop_parsing()
 
@@ -145,6 +181,7 @@ def main(argv=None):
     for t in threads:
        t.join()
 
+    print("Moving ongoing jobs back to queued")
     crawler.cancel_ongoing_jobs()
     print ("Exiting Main Thread")
 
