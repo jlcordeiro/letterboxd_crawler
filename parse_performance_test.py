@@ -9,42 +9,38 @@ def parse_beautiful_soup(page_contents):
     page_next = extract_next_page(soup)
     return (following, page_next)
 
+def extract_value(str, key, start):
+    start = str.find(key, start) + len(key)
+    end = str.find("\"", start)
+    return (start, end, str[start : end])
+
+def extract_pagination(str):
+    key_page_next = "\"next\" href=\""
+
+    start = str.rfind("paginate-nextprev")
+    start = str.find(key_page_next, start)
+    if start is -1:
+        return None
+
+    start += len(key_page_next)
+    end_idx = str.find("\"", start)
+    return str[start + 1 : end_idx]
+
 def parse_strfind(page_contents):
     following = []
 
-    key_username = "href=\""
-    key_page_next = "\"next\" href=\""
+    start = 1
+    while start > 0:
+        start = page_contents.find("table-person", start)
+        if start > 0:
+            (start, _, followed) = extract_value(page_contents, "href=\"", start)
+            following.append(followed[1 : -1])
 
-    start_idx = 0
-    while True:
-        start_idx = page_contents.find("table-person", start_idx)
-        if start_idx is -1:
-            break
-        start_idx = page_contents.find(key_username, start_idx) + len(key_username)
-        end_idx = page_contents.find("\"", start_idx)
-
-        following.append(page_contents[start_idx + 1 : end_idx - 1])
-
-        start_idx = end_idx
-
-    page_next = None
-    start_idx = page_contents.rfind("paginate-nextprev")
-    if start_idx > 0:
-        start_idx = page_contents.find(key_page_next, start_idx)
-        if start_idx > 0:
-            start_idx += len(key_page_next)
-            end_idx = page_contents.find("\"", start_idx)
-            page_next = page_contents[start_idx + 1 : end_idx]
-
+    page_next = extract_pagination(page_contents)
     return (following, page_next)
 
 def extract_movies(page_contents):
     movies = []
-
-    def extract_value(str, key, start):
-        start = str.find(key, start) + len(key)
-        end = str.find("\"", start)
-        return (start, end, str[start : end])
 
     start = 1
     while start > 0:
@@ -56,17 +52,7 @@ def extract_movies(page_contents):
             movies.append((movie_name[:-1], int(movie_rate)))
 
 
-    # pagination
-
-    key_page_next = "\"next\" href=\""
-
-    page_next = None
-    start = page_contents.rfind("paginate-nextprev")
-    start = page_contents.find(key_page_next, start)
-    if start > 0:
-        start += len(key_page_next)
-        end_idx = page_contents.find("\"", start)
-        page_next = page_contents[start + 1 : end_idx]
+    page_next = extract_pagination(page_contents)
 
     return (movies, page_next)
 
@@ -82,7 +68,7 @@ if __name__ == "__main__":
         with open(test_data_filename, 'r') as file:
             test_data = file.read()
 
-        n_cycles = 5
+        n_cycles = 10
         n_runs   = 100
 
         print("== ", test_name)
