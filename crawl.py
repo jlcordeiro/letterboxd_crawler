@@ -19,7 +19,7 @@ class Profile:
     def __eq__(self, other):
         return self.username == other.username
 
-class Profiles:
+class ProfileCrawler:
     def __init__(self):
         self.lock_             = threading.Lock()
         self.parsed_profiles   = set()
@@ -126,12 +126,12 @@ def main(argv=None):
     args = parser.parse_args(argv)
     first_profile = args.letterboxd_url
 
-    profiles = Profiles()
-    profiles.enqueue(first_profile)
+    crawler = ProfileCrawler()
+    crawler.enqueue(first_profile)
 
     threads = []
     for i in range(4):
-        thread = LbThread(profiles, i + 1)
+        thread = LbThread(crawler, i + 1)
         thread.start()
         threads.append(thread)
 
@@ -139,14 +139,13 @@ def main(argv=None):
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("ASKED TO STOP!!!")
-        profiles.stop_parsing()
+        crawler.stop_parsing()
 
     print("Waiting for ongoing threads")
     for t in threads:
        t.join()
 
-    profiles.cancel_ongoing_jobs()
+    crawler.cancel_ongoing_jobs()
     print ("Exiting Main Thread")
 
 if __name__ == "__main__":
