@@ -129,7 +129,7 @@ class Crawler(unittest.TestCase):
         c.ongoing_usernames = {"ongoing1", "ongoing2"}
         c.queued_usernames = {"q1", "q2", "q3"}
 
-        c.on_parsed("ongoing2", ["newp1", "newp2", "newp3", "parsed2"])
+        c.on_parsed("ongoing2", ["newp1", "newp2", "newp3", "parsed2", "ongoing1", "ongoing2"])
 
         # ongoing2 should have been moved to parsed. ongoing 1 remains
         self.assertTrue("ongoing1" in c.ongoing_usernames)
@@ -141,6 +141,9 @@ class Crawler(unittest.TestCase):
         self.assertTrue("newp3" in c.queued_usernames)
         # unless they've been parsed already
         self.assertTrue("parsed2" not in c.queued_usernames)
+        # or even on one of the other sets
+        self.assertTrue("ongoing1" not in c.queued_usernames)
+        self.assertTrue("ongoing2" not in c.queued_usernames)
 
 
 if __name__ == '__main__':

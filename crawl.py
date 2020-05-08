@@ -60,7 +60,8 @@ class ProfileCrawler:
         will just ignore it silently.
         """
         with self.lock_:
-            if Profile(username) not in self.parsed_profiles:
+            if username not in self.ongoing_usernames \
+                and Profile(username) not in self.parsed_profiles:
                 self.queued_usernames.add(username)
 
     def on_parsed(self, username, following):
