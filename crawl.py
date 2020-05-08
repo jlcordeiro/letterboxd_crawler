@@ -8,44 +8,49 @@ from requests import session
 from bs4 import BeautifulSoup
 import threading
 
+class Profile:
+    def __init__(self, username, following = []):
+        self.username  = username
+        self.following = following
+
+    def __hash__(self):
+        return hash(self.username)
+
+    def __eq__(self, other):
+        return self.username == other.username
+
 class Profiles:
     def __init__(self):
-        self.lock_                   = threading.Lock()
-        self.profiles_               = {}
-        self.queue_                  = queue.Queue()
-        self.total_profiles_         = 0
-        self.profiles_left_to_parse_ = 0
+        self.lock_             = threading.Lock()
+        self.parsed_profiles   = set()
+        self.queued_usernames  = set()
+        self.ongoing_usernames = set()
 
-    def add(self, p):
+    def enqueue(self, username):
         with self.lock_:
-            if p not in self.profiles_:
-                self.queue_.put(p)
-                self.profiles_[p]            = []
-                self.total_profiles_         += 1
-                self.profiles_left_to_parse_ += 1
+            if Profile(username) not in self.parsed_profiles:
+                self.queued_usernames.add(username)
 
-    def update(self, p, following):
+    def on_parsed(self, username, following):
+        for f in following:
+            self.enqueue(f)
+
+        p = Profile(username, following)
         with self.lock_:
-            self.profiles_[p].extend(following)
-            #print("{}: {}".format(p, following))
+            self.parsed_profiles.add(p)
+            self.ongoing_usernames.discard(username)
+            print("{} parsed. {} ongoing. {} queued.".format(len(self.parsed_profiles),
+                                                             len(self.ongoing_usernames),
+                                                             len(self.queued_usernames)))
 
     def next(self):
         with self.lock_:
-            if self.queue_.empty():
+            if len(self.queued_usernames) == 0:
                 return None
-            self.profiles_left_to_parse_ -= 1
-            return self.queue_.get()
 
-    def peek(self):
-        with self.lock_:
-            print("{} out of {} profiles left to parse".format(self.profiles_left_to_parse_, self.total_profiles_))
-
-    def show(self):
-        with self.lock_:
-            for k in self.profiles_:
-                if (self.profiles_[k]):
-                    print("{}: {}".format(k, self.profiles_[k]))
-        print("-----------------------------")
+            popped_username = self.queued_usernames.pop()
+            self.ongoing_usernames.add(popped_username)
+            return popped_username
 
 
 def extract_following(soup):
@@ -64,35 +69,29 @@ def extract_next_page(soup):
 
     return pagination["href"][1:]
 
+s = session()
 def crawl_network(profiles, source_profile):
-    profiles.add(source_profile)
-
     # note: this gets changed inside the loop
     page_next = source_profile + "/following/page/1"
 
+    following = []
     while page_next is not None:
         base_url = "https://letterboxd.com/"
-        watchlist_url = base_url + page_next
-        #print(watchlist_url)
-
-        # Get first page, gather general data
-        s = session()
-        r = s.get(watchlist_url)
+        r = s.get(base_url + page_next)
         soup = BeautifulSoup(r.text, "html.parser")
 
-        following = extract_following(soup)
+        following.extend(extract_following(soup))
         page_next = extract_next_page(soup)
 
-        profiles.update(source_profile, following)
-        for f in following:
-            profiles.add(f)
+    profiles.on_parsed(source_profile, following)
 
 stop = False
 
 class LbThread (threading.Thread):
-    def __init__(self, profiles):
+    def __init__(self, profiles, thread_id):
         threading.Thread.__init__(self)
         self.profiles = profiles
+        self.thread_id = thread_id
 
     def run(self):
         while stop is False:
@@ -114,26 +113,24 @@ def main(argv=None):
     first_profile = args.letterboxd_url
 
     profiles = Profiles()
-    profiles.add(first_profile)
+    profiles.enqueue(first_profile)
 
     threads = []
     for i in range(4):
-        thread = LbThread(profiles)
+        thread = LbThread(profiles, i + 1)
         thread.start()
         threads.append(thread)
 
     try:
         while True:
             time.sleep(1)
-            profiles.peek()
-            profiles.show()
     except KeyboardInterrupt:
+        print("ASKED TO STOP!!!")
         stop = True
 
     for t in threads:
        t.join()
     print ("Exiting Main Thread")
-    profiles.show()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
