@@ -1,4 +1,3 @@
-from requests import session
 from bs4 import BeautifulSoup
 from datetime import datetime
 from crawl import extract_following, extract_next_page
@@ -28,54 +27,53 @@ def parse_strfind(page_contents):
 
         start_idx = end_idx
 
+    page_next = None
     start_idx = page_contents.rfind("paginate-nextprev")
-    if start_idx is -1:
-        page_next = None
-    start_idx = page_contents.find(key_page_next, start_idx)
-    if start_idx is -1:
-        page_next = None
-    start_idx += len(key_page_next)
-    end_idx = page_contents.find("\"", start_idx)
-
-    page_next = page_contents[start_idx + 1 : end_idx]
+    if start_idx > 0:
+        start_idx = page_contents.find(key_page_next, start_idx)
+        if start_idx > 0:
+            start_idx += len(key_page_next)
+            end_idx = page_contents.find("\"", start_idx)
+            page_next = page_contents[start_idx + 1 : end_idx]
 
     return (following, page_next)
 
-def validate(result):
-    expected = (['dunkeey', 'gonfsilva', 'crispim', 'inesqsc', 'nihilism', 'carsonkims', 'o_serkan_o', 'davidehrlich', 'carolina_ab', 'nunoabreu', 'boppitybunny', 'apeloeh', 'wonderfulcinema', 'followtheblind', 'jkottke', 'sandwich', 'khoi', 'vishnevetsky', 'dmoren', 'pbones', 'emanuel', 'zkorpi', 'inesdelgado', 'faitherina', 'mpmont'], 'jlcordeiro/following/page/2/')
+def validate(expected, result):
     if (result != expected):
         print("Error!\nExpected: {}\nGot: {}".format(expected, result))
     else:
         print("ok")
 
 if __name__ == "__main__":
-    filename = "testdata/jlcordeiro_following_1.html"
-    with open(filename, 'r') as file:
-        data = file.read()
+    def run_tests(filename):
+        with open(filename, 'r') as file:
+            data = file.read()
+
+        n_cycles = 5
+
+        print("== string scanning")
+        absolute_start_time = datetime.now()
+        for x in range(n_cycles):
+            start_time = datetime.now()
+            for _ in range(100):
+                result = parse_strfind(data)
+
+            end_time = datetime.now()
+            print('Test {}. Duration: {}'.format(x, end_time - start_time))
+        print('Total. Duration: {}\n\n'.format(end_time - absolute_start_time))
 
 
-    print("== string scanning")
-    absolute_start_time = datetime.now()
-    for x in range(10):
-        start_time = datetime.now()
-        for _ in range(100):
-            result = parse_strfind(data)
+        print("== BeautifulSoup")
+        absolute_start_time = datetime.now()
+        for x in range(n_cycles):
+            start_time = datetime.now()
+            for _ in range(100):
+                expected = parse_beautiful_soup(data)
 
-        end_time = datetime.now()
-        print('Test {}. Duration: {}'.format(x, end_time - start_time))
-    validate(result)
-    print('Total. Duration: {}\n\n'.format(end_time - absolute_start_time))
+            end_time = datetime.now()
+            print('Test {}. Duration: {}'.format(x, end_time - start_time))
+        validate(expected, result)
+        print('Total. Duration: {}'.format(end_time - absolute_start_time))
 
-
-    print("== BeautifulSoup")
-    absolute_start_time = datetime.now()
-    for x in range(10):
-        start_time = datetime.now()
-        for _ in range(100):
-            result = parse_beautiful_soup(data)
-
-        end_time = datetime.now()
-        print('Test {}. Duration: {}'.format(x, end_time - start_time))
-    validate(result)
-    print('Total. Duration: {}'.format(end_time - absolute_start_time))
-
+    run_tests("testdata/jlcordeiro_following_1.html")
+    run_tests("testdata/jlcordeiro_following_2.html")
