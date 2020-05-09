@@ -6,7 +6,6 @@ import time
 import queue
 import argparse
 from requests import session
-from bs4 import BeautifulSoup
 import threading
 
 class Profile:
@@ -119,21 +118,52 @@ class ProfileCrawler:
         for p in d["parsed"]:
             self.parsed_profiles.add(Profile(p[0], p[1]))
 
-def extract_following(soup):
-    table = soup.find_all("td", attrs={"class": "table-person"})
-    return [person.find("a", href=True)["href"][1 : -1] for person in table]
 
+def extract_value(str, key, start):
+    start = str.find(key, start) + len(key)
+    end = str.find("\"", start)
+    return (start, end, str[start : end])
 
-def extract_next_page(soup):
-    pagination = soup.find_all("div", attrs={"class": "paginate-nextprev"})
-    if len(pagination) is 0:
+def extract_next_page(str):
+    key_page_next = "\"next\" href=\""
+
+    start = str.rfind("paginate-nextprev")
+    start = str.find(key_page_next, start)
+    if start is -1:
         return None
 
-    pagination = pagination[-1].find("a", href=True)
-    if pagination is None:
-        return None
+    start += len(key_page_next)
+    end_idx = str.find("\"", start)
+    return str[start + 1 : end_idx]
 
-    return pagination["href"][1:]
+def extract_following(page):
+    following = []
+
+    start = 1
+    while start > 0:
+        start = page.find("table-person", start)
+        if start > 0:
+            (start, _, followed) = extract_value(page, "href=\"", start)
+            following.append(followed[1 : -1])
+
+    return following
+
+def extract_movies(page_contents):
+    movies = []
+
+    start = 1
+    while start > 0:
+        start = page_contents.find("poster-container", start)
+        if start > 0:
+            (start, _, movie_name) = extract_value(page_contents, "data-target-link=\"/film/", start)
+            (_, start, movie_rate) = extract_value(page_contents, " rated-", start)
+
+            movies.append((movie_name[:-1], int(movie_rate)))
+
+
+    page_next = extract_next_page(page_contents)
+
+    return (movies, page_next)
 
 s = session()
 def crawl_network(profiles, source_profile):
@@ -147,10 +177,9 @@ def crawl_network(profiles, source_profile):
 
         base_url = "https://letterboxd.com/"
         r = s.get(base_url + page_next)
-        soup = BeautifulSoup(r.text, "html.parser")
 
-        following.extend(extract_following(soup))
-        page_next = extract_next_page(soup)
+        following.extend(extract_following(r.text))
+        page_next = extract_next_page(r.text)
 
     profiles.on_parsed(source_profile, following)
 

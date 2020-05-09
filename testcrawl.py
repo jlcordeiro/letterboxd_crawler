@@ -1,13 +1,12 @@
 import crawl
 import json
 import unittest
-from bs4 import BeautifulSoup
 
 class Parse(unittest.TestCase):
     def setUp(self):
         def html_open(x):
             f = open(x)
-            data = BeautifulSoup(f.read(), "html.parser")
+            data = f.read()
             f.close()
             return data
 
