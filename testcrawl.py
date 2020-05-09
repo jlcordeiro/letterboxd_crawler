@@ -1,4 +1,5 @@
 import crawl
+import json
 import unittest
 from bs4 import BeautifulSoup
 
@@ -145,6 +146,76 @@ class Crawler(unittest.TestCase):
         self.assertTrue("ongoing1" not in c.queued_usernames)
         self.assertTrue("ongoing2" not in c.queued_usernames)
 
+    def test_laod(self):
+        c = crawl.ProfileCrawler()
+        c.loads("""
+        {
+          "parsed": [
+            [
+              "carolina_ab",
+              [
+                "inesgoncalves",
+                "nunoabreu",
+                "inesdelgado",
+                "jlcordeiro"
+              ]
+            ],
+            [
+              "jlcordeiro",
+              [
+                "dunkeey",
+                "gonfsilva",
+                "nihilism",
+                "siracusa"
+              ]
+            ]
+          ],
+          "queued": [
+            "ingridgoeswest",
+            "gonfsilva",
+            "kika",
+            "flacerda"
+          ],
+          "ongoing": []
+        }
+        """)
+
+        self.assertEqual(set(), c.ongoing_usernames)
+        self.assertEqual({"ingridgoeswest", "gonfsilva", "kika", "flacerda"}, c.queued_usernames)
+
+        self.assertEqual(2, len(c.parsed_profiles))
+        self.assertTrue(crawl.Profile("carolina_ab") in c.parsed_profiles)
+        self.assertTrue(crawl.Profile("jlcordeiro") in c.parsed_profiles)
+
+        def check_profile(profile):
+            if profile.username == "jlcordeiro":
+                self.assertEqual({"dunkeey","gonfsilva","nihilism","siracusa"}, set(profile.following))
+            else:
+                self.assertEqual({"inesgoncalves","nunoabreu","inesdelgado","jlcordeiro"}, set(profile.following))
+
+        check_profile(c.parsed_profiles.pop())
+        check_profile(c.parsed_profiles.pop())
+
+    def test_dump(self):
+        c = crawl.ProfileCrawler()
+        c.enqueue("p1")
+        c.enqueue("p2")
+        c.enqueue("p3")
+
+        d = c.dump()
+
+        self.assertEqual([], d["parsed"])
+        self.assertEqual([], d["ongoing"])
+        self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
+
+        c.on_parsed("p4", ["p1", "p2"])
+        d = c.dump()
+
+        self.assertEqual(1, len(d["parsed"]))
+        self.assertEqual("p4", d["parsed"][0][0])
+        self.assertEqual({"p1", "p2"}, set(d["parsed"][0][1]))
+        self.assertEqual([], d["ongoing"])
+        self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
 
 if __name__ == '__main__':
     unittest.main()

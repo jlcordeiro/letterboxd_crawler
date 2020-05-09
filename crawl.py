@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import json
 import time
 import queue
 import argparse
@@ -103,6 +104,20 @@ class ProfileCrawler:
             self.ongoing_usernames.add(popped_username)
             return popped_username
 
+    def dump(self):
+        """ Dump the whole internal stte as a dictionary. """
+        return {"parsed": [(p.username, p.following) for p in self.parsed_profiles],
+                "queued": list(self.queued_usernames),
+                "ongoing": list(self.ongoing_usernames)}
+
+    def loads(self, str):
+        """ Load state from a string. """
+        d = json.loads(str)
+        self.queued_usernames = set(d["queued"])
+        self.ongoing_usernames = set(d["ongoing"])
+
+        for p in d["parsed"]:
+            self.parsed_profiles.add(Profile(p[0], p[1]))
 
 def extract_following(soup):
     table = soup.find_all("td", attrs={"class": "table-person"})
@@ -165,7 +180,17 @@ def main(argv=None):
     first_profile = args.letterboxd_url
 
     crawler = ProfileCrawler()
-    crawler.enqueue(first_profile)
+
+    dump_filename = 'dump.lmatch'
+    try:
+        with open(dump_filename, 'r') as infile:
+            print("Loading previous state.")
+            str = infile.read()
+            crawler.loads(str)
+            infile.close()
+            print("State successfully loaded.")
+    except FileNotFoundError:
+        crawler.enqueue(first_profile)
 
     threads = []
     for i in range(4):
@@ -175,10 +200,10 @@ def main(argv=None):
 
     try:
         while True:
-            time.sleep(10)
             print("{} parsed. {} ongoing. {} queued.".format(len(crawler.parsed_profiles),
                                                              len(crawler.ongoing_usernames),
                                                              len(crawler.queued_usernames)))
+            time.sleep(10)
     except KeyboardInterrupt:
         crawler.stop_parsing()
 
@@ -188,7 +213,14 @@ def main(argv=None):
 
     print("Moving ongoing jobs back to queued")
     crawler.cancel_ongoing_jobs()
+
+    print("Saving state to persistence layer")
+    with open(dump_filename, 'w') as outfile:
+        json.dump(crawler.dump(), outfile)
+
+
     print ("Exiting Main Thread")
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
