@@ -2,6 +2,7 @@ import json
 import unittest
 from lmatch import profile_crawler
 
+
 class ProfileCrawler(unittest.TestCase):
     def setUp(self):
         pass
@@ -23,7 +24,7 @@ class ProfileCrawler(unittest.TestCase):
 
     def test_cancel_ongoing(self):
         c = profile_crawler.ProfileCrawler()
-        c.parsed_profiles = {1, 2, 3} #put some junk in
+        c.parsed_profiles = {1, 2, 3}  # put some junk in
         c.ongoing_usernames = {"a", "b", "c"}
         c.queued_usernames = {"d", "e", "f"}
 
@@ -53,9 +54,9 @@ class ProfileCrawler(unittest.TestCase):
         c.enqueue("jess")
         self.assertEqual({"john", "jess", "jack"}, c.queued_usernames)
         # but one that was seen before isn't
-        c.enqueue("joe") # same as put on the set of parsed profiles
+        c.enqueue("joe")  # same as put on the set of parsed profiles
         self.assertEqual({"john", "jess", "jack"}, c.queued_usernames)
-        # and just adding something that exists in the queue, obviously does nothing
+        # and just adding one that exists in the queue, obviously does nothing
         c.enqueue("john")
         c.enqueue("jess")
         self.assertEqual({"john", "jess", "jack"}, c.queued_usernames)
@@ -99,12 +100,15 @@ class ProfileCrawler(unittest.TestCase):
         c.ongoing_usernames = {"ongoing1", "ongoing2"}
         c.queued_usernames = {"q1", "q2", "q3"}
 
-        c.on_parsed("ongoing2", ["newp1", "newp2", "newp3", "parsed2", "ongoing1", "ongoing2"])
+        c.on_parsed("ongoing2",
+                    ["newp1", "newp2", "newp3", "parsed2",
+                        "ongoing1", "ongoing2"])
 
         # ongoing2 should have been moved to parsed. ongoing 1 remains
         self.assertTrue("ongoing1" in c.ongoing_usernames)
         self.assertTrue("ongoing2" not in c.ongoing_usernames)
-        self.assertTrue(profile_crawler.Profile("ongoing2") in c.parsed_profiles)
+        self.assertTrue(profile_crawler.Profile("ongoing2")
+                        in c.parsed_profiles)
 
         # other users seen should be queued
         self.assertTrue("newp1" in c.queued_usernames)
@@ -150,17 +154,24 @@ class ProfileCrawler(unittest.TestCase):
         """)
 
         self.assertEqual(set(), c.ongoing_usernames)
-        self.assertEqual({"ingridgoeswest", "gonfsilva", "kika", "flacerda"}, c.queued_usernames)
+        self.assertEqual({"ingridgoeswest", "gonfsilva", "kika", "flacerda"},
+                         c.queued_usernames)
 
         self.assertEqual(2, len(c.parsed_profiles))
-        self.assertTrue(profile_crawler.Profile("carolina_ab") in c.parsed_profiles)
-        self.assertTrue(profile_crawler.Profile("jlcordeiro") in c.parsed_profiles)
+        self.assertTrue(profile_crawler.Profile("carolina_ab")
+                        in c.parsed_profiles)
+        self.assertTrue(profile_crawler.Profile("jlcordeiro")
+                        in c.parsed_profiles)
 
         def check_profile(profile):
             if profile.username == "jlcordeiro":
-                self.assertEqual({"dunkeey","gonfsilva","nihilism","siracusa"}, set(profile.following))
+                self.assertEqual(
+                        {"dunkeey", "gonfsilva", "nihilism", "siracusa"},
+                        set(profile.following))
             else:
-                self.assertEqual({"inesgoncalves","nunoabreu","inesdelgado","jlcordeiro"}, set(profile.following))
+                self.assertEqual(
+                  {"inesgoncalves", "nunoabreu", "inesdelgado", "jlcordeiro"},
+                  set(profile.following))
 
         check_profile(c.parsed_profiles.pop())
         check_profile(c.parsed_profiles.pop())
@@ -185,6 +196,7 @@ class ProfileCrawler(unittest.TestCase):
         self.assertEqual({"p1", "p2"}, set(d["parsed"][0][1]))
         self.assertEqual([], d["ongoing"])
         self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,13 +1,14 @@
 import json
 import threading
 
+
 class Profile:
     """
     Class that contains all the data relative to a
     Letterboxd profile / account.
     """
-    def __init__(self, username, following = []):
-        self.username  = username
+    def __init__(self, username, following=[]):
+        self.username = username
         self.following = following
 
     def __hash__(self):
@@ -15,6 +16,7 @@ class Profile:
 
     def __eq__(self, other):
         return self.username == other.username
+
 
 class ProfileCrawler:
     """
@@ -27,11 +29,11 @@ class ProfileCrawler:
     This class is thread-safe.
     """
     def __init__(self):
-        self.lock_             = threading.Lock()
-        self.parsed_profiles   = set()
-        self.queued_usernames  = set()
+        self.lock_ = threading.Lock()
+        self.parsed_profiles = set()
+        self.queued_usernames = set()
         self.ongoing_usernames = set()
-        self.keep_parsing      = True
+        self.keep_parsing = True
 
     def stop_parsing(self):
         """ Flag to anyone using the crawler that they should stop. """
@@ -58,7 +60,7 @@ class ProfileCrawler:
         """
         with self.lock_:
             if username not in self.ongoing_usernames \
-                and Profile(username) not in self.parsed_profiles:
+                    and Profile(username) not in self.parsed_profiles:
                 self.queued_usernames.add(username)
 
     def on_parsed(self, username, following):
@@ -68,7 +70,7 @@ class ProfileCrawler:
         username is removed from the list of ongoing jobs.
 
         Any other users that are seen in the details of this profiles
-        (following, follower, etc), if never seen before, are adding to the 
+        - following, follower, etc) - if never seen before, are adding to the
         queue to be processed in the future.
         """
         for f in following:
@@ -98,7 +100,8 @@ class ProfileCrawler:
 
     def dump(self):
         """ Dump the whole internal stte as a dictionary. """
-        return {"parsed": [(p.username, p.following) for p in self.parsed_profiles],
+        return {"parsed": [(p.username, p.following)
+                           for p in self.parsed_profiles],
                 "queued": list(self.queued_usernames),
                 "ongoing": list(self.ongoing_usernames)}
 
@@ -110,5 +113,3 @@ class ProfileCrawler:
 
         for p in d["parsed"]:
             self.parsed_profiles.add(Profile(p[0], p[1]))
-
-

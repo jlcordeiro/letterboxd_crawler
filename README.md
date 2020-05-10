@@ -6,8 +6,10 @@ Note:
 This code has no commercial use and is purely an academic exercise.
 
 
-# Run tests
+# Running
 
+Check PEP8:
 ```
+python -m pycodestyle lmatch/*.py
 python -m unittest discover tests
 ```
