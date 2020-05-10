@@ -1,6 +1,10 @@
 
 def _extract_value(str, key, start):
-    start = str.find(key, start) + len(key)
+    start = str.find(key, start)
+    if start is -1:
+        return (-1, -1, "")
+
+    start += len(key)
     end = str.find("\"", start)
     return (start, end, str[start:end])
 
@@ -34,13 +38,25 @@ def following(page):
 def movies_watched(page):
     movies = []
 
+    tag_movie_container = "poster-container"
+    tag_movie_name = "data-target-link=\"/film/"
+    tag_movie_rate = " rated-"
+
     start = 1
     while start > 0:
-        start = page.find("poster-container", start)
+        start = page.find(tag_movie_container, start)
         if start > 0:
-            tag = "data-target-link=\"/film/"
-            (start, _, movie_name) = _extract_value(page, tag, start)
-            (_, start, movie_rate) = _extract_value(page, " rated-", start)
+            # some movies aren't rated. so we can only search for the rating
+            # up to the beginning of the next movie
+            # detect where to stop
+            stop_at = page.find(tag_movie_container, start + 3)
+
+            (start, _, movie_name) = _extract_value(page, tag_movie_name, start)
+            (_, start, movie_rate) = _extract_value(page, tag_movie_rate, start)
+
+            if start > stop_at or start is -1:
+                start = stop_at - 1
+                movie_rate = 0
 
             movies.append((movie_name[:-1], int(movie_rate)))
 

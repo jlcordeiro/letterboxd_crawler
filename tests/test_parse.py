@@ -3,17 +3,17 @@ from lmatch import parse
 
 
 class Parse(unittest.TestCase):
-    def setUp(self):
-        def html_open(x):
-            f = open(x)
-            data = f.read()
-            f.close()
-            return data
+    def html_open(self, x):
+        f = open(x)
+        data = f.read()
+        f.close()
+        return data
 
+    def setUp(self):
         self.page_following_1 = \
-            html_open("tests/data/jlcordeiro_following_1.html")
+            self.html_open("tests/data/jlcordeiro_following_1.html")
         self.page_following_2 = \
-            html_open("tests/data/jlcordeiro_following_2.html")
+            self.html_open("tests/data/jlcordeiro_following_2.html")
 
     def test_get_following_from_page(self):
         expected = ['dunkeey', 'gonfsilva', 'crispim',
@@ -35,6 +35,27 @@ class Parse(unittest.TestCase):
 
         self.assertEqual(None,
                          parse.next_page(self.page_following_2))
+
+    def test_parse_movies(self):
+        page = self.html_open("tests/data/jlcordeiro_watched_1.html")
+        (movies, next_page) = parse.movies_watched(page)
+        self.assertEquals("jlcordeiro/films/page/2/", next_page)
+
+        page = self.html_open("tests/data/jlcordeiro_watched_3.html")
+        (movies, next_page) = parse.movies_watched(page)
+        self.assertEquals("jlcordeiro/films/page/4/", next_page)
+
+        page = self.html_open("tests/data/jlcordeiro_watched_7.html")
+        (movies, next_page) = parse.movies_watched(page)
+        self.assertEquals(None, next_page)
+
+        page = self.html_open("tests/data/tommyatlon_watched_1.html")
+        (movies, next_page) = parse.movies_watched(page)
+        self.assertEquals("tommyatlon/films/page/2/", next_page)
+
+        self.assertEquals(("6-underground", 9), movies[0])
+        self.assertEquals(("the-equalizer-2", 10), movies[-7])
+        self.assertEquals(("jurassic-world-fallen-kingdom", 0), movies[-1])
 
 
 if __name__ == '__main__':
