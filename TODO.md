@@ -1,3 +1,3 @@
-# Tests
-
-- Parse movies.
+- Test parsing movies.
+- requirements.txt
+- consider type hints
