@@ -38,19 +38,23 @@ class Parse(unittest.TestCase):
 
     def test_parse_movies(self):
         page = self.html_open("tests/data/jlcordeiro_watched_1.html")
-        (movies, next_page) = parse.movies_watched(page)
+        movies = parse.movies_watched(page)
+        next_page = parse.next_page(page)
         self.assertEquals("jlcordeiro/films/page/2/", next_page)
 
         page = self.html_open("tests/data/jlcordeiro_watched_3.html")
-        (movies, next_page) = parse.movies_watched(page)
+        movies = parse.movies_watched(page)
+        next_page = parse.next_page(page)
         self.assertEquals("jlcordeiro/films/page/4/", next_page)
 
         page = self.html_open("tests/data/jlcordeiro_watched_7.html")
-        (movies, next_page) = parse.movies_watched(page)
+        movies = parse.movies_watched(page)
+        next_page = parse.next_page(page)
         self.assertEquals(None, next_page)
 
         page = self.html_open("tests/data/tommyatlon_watched_1.html")
-        (movies, next_page) = parse.movies_watched(page)
+        movies = parse.movies_watched(page)
+        next_page = parse.next_page(page)
         self.assertEquals("tommyatlon/films/page/2/", next_page)
 
         self.assertEquals(("6-underground", 9), movies[0])

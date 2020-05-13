@@ -60,6 +60,4 @@ def movies_watched(page):
 
             movies.append((movie_name[:-1], int(movie_rate)))
 
-    page_next = next_page(page)
-
-    return (movies, page_next)
+    return movies
