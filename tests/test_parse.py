@@ -40,26 +40,26 @@ class Parse(unittest.TestCase):
         page = self.html_open("tests/data/jlcordeiro_watched_1.html")
         movies = parse.movies_watched(page)
         next_page = parse.next_page(page)
-        self.assertEquals("jlcordeiro/films/page/2/", next_page)
+        self.assertEqual("jlcordeiro/films/page/2/", next_page)
 
         page = self.html_open("tests/data/jlcordeiro_watched_3.html")
         movies = parse.movies_watched(page)
         next_page = parse.next_page(page)
-        self.assertEquals("jlcordeiro/films/page/4/", next_page)
+        self.assertEqual("jlcordeiro/films/page/4/", next_page)
 
         page = self.html_open("tests/data/jlcordeiro_watched_7.html")
         movies = parse.movies_watched(page)
         next_page = parse.next_page(page)
-        self.assertEquals(None, next_page)
+        self.assertEqual(None, next_page)
 
         page = self.html_open("tests/data/tommyatlon_watched_1.html")
         movies = parse.movies_watched(page)
         next_page = parse.next_page(page)
-        self.assertEquals("tommyatlon/films/page/2/", next_page)
+        self.assertEqual("tommyatlon/films/page/2/", next_page)
 
-        self.assertEquals(("6-underground", 9), movies[0])
-        self.assertEquals(("the-equalizer-2", 10), movies[-7])
-        self.assertEquals(("jurassic-world-fallen-kingdom", 0), movies[-1])
+        self.assertEqual(("6-underground", 9), movies[0])
+        self.assertEqual(("the-equalizer-2", 10), movies[-7])
+        self.assertEqual(("jurassic-world-fallen-kingdom", 0), movies[-1])
 
 
 if __name__ == '__main__':
