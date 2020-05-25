@@ -7,10 +7,13 @@ class Profile:
     Class that contains all the data relative to a
     Letterboxd profile / account.
     """
-    def __init__(self, username, following=[], movies=[]):
+    def __init__(self, username, following=None, movies=None):
         self.username = username
         self.following = following
         self.movies = movies
+
+    def isEmpty(self):
+        return self.following is None or self.movies is None
 
     def __hash__(self):
         return hash(self.username)
@@ -78,7 +81,6 @@ class ProfileCrawler:
             self.enqueue(f)
 
         p = Profile(username, following, movies)
-        print(p)
         with self.lock_:
             self.parsed_profiles.add(p)
             self.ongoing_usernames.discard(username)
