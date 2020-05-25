@@ -1,28 +1,38 @@
 import sys
 import json
 import time
+import pymongo
 import argparse
 import threading
 from requests import session
 from lmatch import profile_crawler, parse
 
 s = session()
-def crawl_network(profiles, source_profile):
-    # note: this gets changed inside the loop
-    page_next = source_profile + "/following/page/1"
 
-    following = []
+def crawl(profiles, profile, page_next, parser):
+    print(profile)
+    base_url = "https://letterboxd.com/"
+    result = []
     while page_next is not None:
         if profiles.keep_parsing is False:
-            return
+            return None
 
-        base_url = "https://letterboxd.com/"
         r = s.get(base_url + page_next)
-
-        following.extend(parse.following(r.text))
+        result.extend(parser(r.text))
         page_next = parse.next_page(r.text)
 
-    profiles.on_parsed(source_profile, following)
+    return result 
+
+def crawl_profile(profiles, source_profile):
+    following = crawl(profiles, source_profile,
+                      source_profile + "/following/page/1",
+                      parse.following)
+
+    movies = crawl(profiles, source_profile,
+                   source_profile + "/films/page/1",
+                   parse.movies_watched)
+
+    profiles.on_parsed(source_profile, following, movies)
 
 class LbThread (threading.Thread):
     def __init__(self, profiles, thread_id):
@@ -36,7 +46,7 @@ class LbThread (threading.Thread):
             if n is None:
                 time.sleep(.5)
             else:
-                crawl_network(self.profiles, n)
+                crawl_profile(self.profiles, n)
 
 
 def main(argv=None):
@@ -74,6 +84,11 @@ def main(argv=None):
                                                              len(crawler.ongoing_usernames),
                                                              len(crawler.queued_usernames)))
             time.sleep(10)
+
+            # all threads stopped
+            if not any([t.isAlive() for t in threads]):
+                print("Ended successfully.")
+                break
     except KeyboardInterrupt:
         crawler.stop_parsing()
 

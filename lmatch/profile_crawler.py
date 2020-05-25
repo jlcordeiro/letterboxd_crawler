@@ -7,9 +7,10 @@ class Profile:
     Class that contains all the data relative to a
     Letterboxd profile / account.
     """
-    def __init__(self, username, following=[]):
+    def __init__(self, username, following=[], movies=[]):
         self.username = username
         self.following = following
+        self.movies = movies
 
     def __hash__(self):
         return hash(self.username)
@@ -63,7 +64,7 @@ class ProfileCrawler:
                     and Profile(username) not in self.parsed_profiles:
                 self.queued_usernames.add(username)
 
-    def on_parsed(self, username, following):
+    def on_parsed(self, username, following, movies):
         """
         This method creates a profile with the details passed as parameter.
         The profile is put on the list of parsed profiles and its
@@ -76,7 +77,8 @@ class ProfileCrawler:
         for f in following:
             self.enqueue(f)
 
-        p = Profile(username, following)
+        p = Profile(username, following, movies)
+        print(p)
         with self.lock_:
             self.parsed_profiles.add(p)
             self.ongoing_usernames.discard(username)
@@ -100,7 +102,7 @@ class ProfileCrawler:
 
     def dump(self):
         """ Dump the whole internal stte as a dictionary. """
-        return {"parsed": [(p.username, p.following)
+        return {"parsed": [(p.username, p.following, p.movies)
                            for p in self.parsed_profiles],
                 "queued": list(self.queued_usernames),
                 "ongoing": list(self.ongoing_usernames)}
@@ -112,4 +114,4 @@ class ProfileCrawler:
         self.ongoing_usernames = set(d["ongoing"])
 
         for p in d["parsed"]:
-            self.parsed_profiles.add(Profile(p[0], p[1]))
+            self.parsed_profiles.add(Profile(p[0], p[1], p[2]))

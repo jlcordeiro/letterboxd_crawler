@@ -102,7 +102,8 @@ class ProfileCrawler(unittest.TestCase):
 
         c.on_parsed("ongoing2",
                     ["newp1", "newp2", "newp3", "parsed2",
-                        "ongoing1", "ongoing2"])
+                        "ongoing1", "ongoing2"],
+                    [])
 
         # ongoing2 should have been moved to parsed. ongoing 1 remains
         self.assertTrue("ongoing1" in c.ongoing_usernames)
@@ -131,7 +132,8 @@ class ProfileCrawler(unittest.TestCase):
                 "nunoabreu",
                 "inesdelgado",
                 "jlcordeiro"
-              ]
+              ],
+              []
             ],
             [
               "jlcordeiro",
@@ -140,6 +142,11 @@ class ProfileCrawler(unittest.TestCase):
                 "gonfsilva",
                 "nihilism",
                 "siracusa"
+              ],
+              [
+                ["extraction-2020", 6 ],
+                [ "sinister", 6 ],
+                [ "breathless", 0 ]
               ]
             ]
           ],
@@ -168,10 +175,12 @@ class ProfileCrawler(unittest.TestCase):
                 self.assertEqual(
                         {"dunkeey", "gonfsilva", "nihilism", "siracusa"},
                         set(profile.following))
+                self.assertEqual( [['extraction-2020', 6], ['sinister', 6], ['breathless', 0]], profile.movies)
             else:
                 self.assertEqual(
                   {"inesgoncalves", "nunoabreu", "inesdelgado", "jlcordeiro"},
                   set(profile.following))
+                self.assertEqual([], profile.movies)
 
         check_profile(c.parsed_profiles.pop())
         check_profile(c.parsed_profiles.pop())
@@ -188,7 +197,7 @@ class ProfileCrawler(unittest.TestCase):
         self.assertEqual([], d["ongoing"])
         self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
 
-        c.on_parsed("p4", ["p1", "p2"])
+        c.on_parsed("p4", ["p1", "p2"], [])
         d = c.dump()
 
         self.assertEqual(1, len(d["parsed"]))
