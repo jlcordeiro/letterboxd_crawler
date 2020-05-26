@@ -42,7 +42,7 @@ class ProfileCrawler:
         self.lock_ = threading.Lock()
         self.parsed_: Set[Profile] = set()
         self.queued_: Set[Profile] = set()
-        self.ongoing_usernames: Set[str] = set()
+        self.ongoing_: Set[Profile] = set()
         self.keep_parsing = True
 
     def stop_parsing(self) -> None:
@@ -58,9 +58,8 @@ class ProfileCrawler:
         all profiles are either fully parsed or waiting to be picked up.
         """
         with self.lock_:
-            while len(self.ongoing_usernames):
-                cancelled_username = self.ongoing_usernames.pop()
-                self.queued_.add(Profile(cancelled_username))
+            while len(self.ongoing_):
+                self.queued_.add(self.ongoing_.pop())
 
     def enqueue(self, username: str) -> None:
         """
@@ -69,7 +68,7 @@ class ProfileCrawler:
         will just ignore it silently.
         """
         with self.lock_:
-            if username not in self.ongoing_usernames \
+            if Profile(username) not in self.ongoing_ \
                     and Profile(username) not in self.parsed_:
                 self.queued_.add(Profile(username))
 
@@ -90,7 +89,7 @@ class ProfileCrawler:
         p = Profile(username, following, movies)
         with self.lock_:
             self.parsed_.add(p)
-            self.ongoing_usernames.discard(username)
+            self.ongoing_.discard(p)
 
     def next_job(self) -> Union[None, str]:
         """
@@ -105,9 +104,9 @@ class ProfileCrawler:
             if len(self.queued_) == 0:
                 return None
 
-            popped_username = self.queued_.pop().username
-            self.ongoing_usernames.add(popped_username)
-            return popped_username
+            popped_profile = self.queued_.pop()
+            self.ongoing_.add(popped_profile)
+            return popped_profile
 
     def dump(self) -> Dict:
         """ Dump the whole internal stte as a dictionary. """
@@ -116,7 +115,7 @@ class ProfileCrawler:
 
         return {"parsed": repr_set(self.parsed_),
                 "queued": repr_set(self.queued_),
-                "ongoing": list(self.ongoing_usernames)}
+                "ongoing": repr_set(self.ongoing_)}
 
     def loads(self, data: str) -> None:
         """ Load state from a string. """
@@ -124,7 +123,9 @@ class ProfileCrawler:
         self.queued_ = set()
         for p in d["queued"]:
             self.queued_.add(Profile(p[0], p[1], p[2]))
-        self.ongoing_usernames = set(d["ongoing"])
+
+        for p in d["ongoing"]:
+            self.ongoing_.add(Profile(p[0], p[1], p[2]))
 
         for p in d["parsed"]:
             self.parsed_.add(Profile(p[0], p[1], p[2]))

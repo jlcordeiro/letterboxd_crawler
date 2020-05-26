@@ -42,11 +42,11 @@ class LbThread (threading.Thread):
 
     def run(self):
         while self.profiles.keep_parsing is True:
-            n = self.profiles.next_job()
-            if n is None:
+            profile = self.profiles.next_job()
+            if profile is None:
                 time.sleep(.5)
             else:
-                crawl_profile(self.profiles, n)
+                crawl_profile(self.profiles, profile.username)
 
 
 def main(argv=None):
@@ -81,7 +81,7 @@ def main(argv=None):
     try:
         while True:
             print("{} parsed. {} ongoing. {} queued.".format(len(crawler.parsed_),
-                                                             len(crawler.ongoing_usernames),
+                                                             len(crawler.ongoing_),
                                                              len(crawler.queued_)))
             time.sleep(10)
 

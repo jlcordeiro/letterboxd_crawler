@@ -12,7 +12,7 @@ class ProfileCrawler(unittest.TestCase):
         c = profile_crawler.ProfileCrawler()
         self.assertEqual(0, len(c.parsed_))
         self.assertEqual(0, len(c.queued_))
-        self.assertEqual(0, len(c.ongoing_usernames))
+        self.assertEqual(0, len(c.ongoing_))
         self.assertEqual(True, c.keep_parsing)
 
     def test_stop(self):
@@ -26,7 +26,7 @@ class ProfileCrawler(unittest.TestCase):
     def test_cancel_ongoing(self):
         c = profile_crawler.ProfileCrawler()
         c.parsed_ = {1, 2, 3}  # put some junk in
-        c.ongoing_usernames = {"a", "b", "c"}
+        c.ongoing_ = {Profile("a"), Profile("b"), Profile("c")}
         c.queued_ = {Profile("d"), Profile("e"), Profile("f")}
 
         c.cancel_ongoing_jobs()
@@ -36,7 +36,7 @@ class ProfileCrawler(unittest.TestCase):
         self.assertTrue({1, 2, 3}, c.parsed_)
 
         # all ongoing jobs should be gone...
-        self.assertEqual(0, len(c.ongoing_usernames))
+        self.assertEqual(0, len(c.ongoing_))
 
         # ... and moved to queued
         self.assertEqual(6, len(c.queued_))
@@ -72,25 +72,25 @@ class ProfileCrawler(unittest.TestCase):
 
         # quick sanity check
         self.assertEqual(3, len(c.queued_))
-        self.assertEqual(0, len(c.ongoing_usernames))
+        self.assertEqual(0, len(c.ongoing_))
 
         job1 = c.next_job()
-        self.assertEqual({job1}, c.ongoing_usernames)
+        self.assertEqual({job1}, c.ongoing_)
         self.assertTrue(job1 not in c.queued_)
 
         job2 = c.next_job()
         self.assertTrue(job1 not in c.queued_)
         self.assertTrue(job2 not in c.queued_)
-        self.assertEqual({job1, job2}, c.ongoing_usernames)
+        self.assertEqual({job1, job2}, c.ongoing_)
 
         job3 = c.next_job()
         self.assertTrue(job1 not in c.queued_)
         self.assertTrue(job2 not in c.queued_)
         self.assertTrue(job3 not in c.queued_)
-        self.assertEqual({job1, job2, job3}, c.ongoing_usernames)
+        self.assertEqual({job1, job2, job3}, c.ongoing_)
 
         self.assertEqual(0, len(c.queued_))
-        self.assertEqual(3, len(c.ongoing_usernames))
+        self.assertEqual(3, len(c.ongoing_))
         self.assertEqual(None, c.next_job())
 
     def test_on_parsed(self):
@@ -99,8 +99,8 @@ class ProfileCrawler(unittest.TestCase):
         c.parsed_ = {profile_crawler.Profile("parsed1"),
                              profile_crawler.Profile("parsed2"),
                              profile_crawler.Profile("parsed3")}
-        c.ongoing_usernames = {"ongoing1", "ongoing2"}
-        c.queued_ = {"q1", "q2", "q3"}
+        c.ongoing_ = {Profile("ongoing1"), Profile("ongoing2")}
+        c.queued_ = {Profile("q1"), Profile("q2"), Profile("q3")}
 
         c.on_parsed("ongoing2",
                     ["newp1", "newp2", "newp3", "parsed2",
@@ -108,8 +108,8 @@ class ProfileCrawler(unittest.TestCase):
                     [])
 
         # ongoing2 should have been moved to parsed. ongoing 1 remains
-        self.assertTrue("ongoing1" in c.ongoing_usernames)
-        self.assertTrue("ongoing2" not in c.ongoing_usernames)
+        self.assertTrue(Profile("ongoing1") in c.ongoing_)
+        self.assertTrue(Profile("ongoing2") not in c.ongoing_)
         self.assertTrue(profile_crawler.Profile("ongoing2")
                         in c.parsed_)
 
@@ -162,7 +162,7 @@ class ProfileCrawler(unittest.TestCase):
         }
         """)
 
-        self.assertEqual(set(), c.ongoing_usernames)
+        self.assertEqual(set(), c.ongoing_)
         self.assertEqual({Profile("ingridgoeswest"), Profile("gonfsilva"),
             Profile("kika"), Profile("flacerda")},
                          c.queued_)
