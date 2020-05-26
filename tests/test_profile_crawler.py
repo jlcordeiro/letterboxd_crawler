@@ -10,7 +10,7 @@ class ProfileCrawler(unittest.TestCase):
 
     def test_ctor(self):
         c = profile_crawler.ProfileCrawler()
-        self.assertEqual(0, len(c.parsed_profiles))
+        self.assertEqual(0, len(c.parsed_))
         self.assertEqual(0, len(c.queued_))
         self.assertEqual(0, len(c.ongoing_usernames))
         self.assertEqual(True, c.keep_parsing)
@@ -25,15 +25,15 @@ class ProfileCrawler(unittest.TestCase):
 
     def test_cancel_ongoing(self):
         c = profile_crawler.ProfileCrawler()
-        c.parsed_profiles = {1, 2, 3}  # put some junk in
+        c.parsed_ = {1, 2, 3}  # put some junk in
         c.ongoing_usernames = {"a", "b", "c"}
         c.queued_ = {Profile("d"), Profile("e"), Profile("f")}
 
         c.cancel_ongoing_jobs()
 
         # checked that the profiles already parsed don't get affected
-        self.assertEqual(3, len(c.parsed_profiles))
-        self.assertTrue({1, 2, 3}, c.parsed_profiles)
+        self.assertEqual(3, len(c.parsed_))
+        self.assertTrue({1, 2, 3}, c.parsed_)
 
         # all ongoing jobs should be gone...
         self.assertEqual(0, len(c.ongoing_usernames))
@@ -47,7 +47,7 @@ class ProfileCrawler(unittest.TestCase):
         c = profile_crawler.ProfileCrawler()
 
         a_profile = profile_crawler.Profile("joe")
-        c.parsed_profiles = {a_profile}
+        c.parsed_ = {a_profile}
 
         # check that a new username is added to the queue
         c.enqueue("jack")
@@ -96,7 +96,7 @@ class ProfileCrawler(unittest.TestCase):
     def test_on_parsed(self):
         # setup
         c = profile_crawler.ProfileCrawler()
-        c.parsed_profiles = {profile_crawler.Profile("parsed1"),
+        c.parsed_ = {profile_crawler.Profile("parsed1"),
                              profile_crawler.Profile("parsed2"),
                              profile_crawler.Profile("parsed3")}
         c.ongoing_usernames = {"ongoing1", "ongoing2"}
@@ -111,7 +111,7 @@ class ProfileCrawler(unittest.TestCase):
         self.assertTrue("ongoing1" in c.ongoing_usernames)
         self.assertTrue("ongoing2" not in c.ongoing_usernames)
         self.assertTrue(profile_crawler.Profile("ongoing2")
-                        in c.parsed_profiles)
+                        in c.parsed_)
 
         # other users seen should be queued
         self.assertTrue(Profile("newp1") in c.queued_)
@@ -167,11 +167,11 @@ class ProfileCrawler(unittest.TestCase):
             Profile("kika"), Profile("flacerda")},
                          c.queued_)
 
-        self.assertEqual(2, len(c.parsed_profiles))
+        self.assertEqual(2, len(c.parsed_))
         self.assertTrue(profile_crawler.Profile("carolina_ab")
-                        in c.parsed_profiles)
+                        in c.parsed_)
         self.assertTrue(profile_crawler.Profile("jlcordeiro")
-                        in c.parsed_profiles)
+                        in c.parsed_)
 
         def check_profile(profile):
             if profile.username == "jlcordeiro":
@@ -185,8 +185,8 @@ class ProfileCrawler(unittest.TestCase):
                   set(profile.following))
                 self.assertEqual([], profile.movies)
 
-        check_profile(c.parsed_profiles.pop())
-        check_profile(c.parsed_profiles.pop())
+        check_profile(c.parsed_.pop())
+        check_profile(c.parsed_.pop())
 
     def test_dump(self):
         c = profile_crawler.ProfileCrawler()

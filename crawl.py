@@ -80,7 +80,7 @@ def main(argv=None):
 
     try:
         while True:
-            print("{} parsed. {} ongoing. {} queued.".format(len(crawler.parsed_profiles),
+            print("{} parsed. {} ongoing. {} queued.".format(len(crawler.parsed_),
                                                              len(crawler.ongoing_usernames),
                                                              len(crawler.queued_)))
             time.sleep(10)

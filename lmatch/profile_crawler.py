@@ -40,7 +40,7 @@ class ProfileCrawler:
     """
     def __init__(self):
         self.lock_ = threading.Lock()
-        self.parsed_profiles: Set[Profile] = set()
+        self.parsed_: Set[Profile] = set()
         self.queued_: Set[Profile] = set()
         self.ongoing_usernames: Set[str] = set()
         self.keep_parsing = True
@@ -70,7 +70,7 @@ class ProfileCrawler:
         """
         with self.lock_:
             if username not in self.ongoing_usernames \
-                    and Profile(username) not in self.parsed_profiles:
+                    and Profile(username) not in self.parsed_:
                 self.queued_.add(Profile(username))
 
     def on_parsed(self, username: str, following: List[str],
@@ -89,7 +89,7 @@ class ProfileCrawler:
 
         p = Profile(username, following, movies)
         with self.lock_:
-            self.parsed_profiles.add(p)
+            self.parsed_.add(p)
             self.ongoing_usernames.discard(username)
 
     def next_job(self) -> Union[None, str]:
@@ -114,7 +114,7 @@ class ProfileCrawler:
         def repr_set(s):
             return  [(p.username, p.following, p.movies) for p in s]
 
-        return {"parsed": repr_set(self.parsed_profiles),
+        return {"parsed": repr_set(self.parsed_),
                 "queued": repr_set(self.queued_),
                 "ongoing": list(self.ongoing_usernames)}
 
@@ -127,4 +127,4 @@ class ProfileCrawler:
         self.ongoing_usernames = set(d["ongoing"])
 
         for p in d["parsed"]:
-            self.parsed_profiles.add(Profile(p[0], p[1], p[2]))
+            self.parsed_.add(Profile(p[0], p[1], p[2]))
