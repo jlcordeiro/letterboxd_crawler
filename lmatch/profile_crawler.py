@@ -7,11 +7,14 @@ class Profile:
     Class that contains all the data relative to a
     Letterboxd profile / account.
     """
-    def __init__(self, username: str,
+    def __init__(self,
+            username: str,
+            depth: int = 0,
             following: List[str] = None,
             movies: List[Tuple[str, int]] = None):
 
         self.username = username
+        self.depth = depth
         self.following = following
         self.movies = movies
 
@@ -61,7 +64,7 @@ class ProfileCrawler:
             while len(self.ongoing_):
                 self.queued_.add(self.ongoing_.pop())
 
-    def enqueue(self, username: str) -> None:
+    def enqueue(self, username: str, depth: int = 0) -> None:
         """
         Adds a user name to the list of profiles to be queued and processed
         later. If this profile has been parsed in the past, the method
@@ -70,9 +73,9 @@ class ProfileCrawler:
         with self.lock_:
             if Profile(username) not in self.ongoing_ \
                     and Profile(username) not in self.parsed_:
-                self.queued_.add(Profile(username))
+                self.queued_.add(Profile(username, depth))
 
-    def on_parsed(self, username: str, following: List[str],
+    def on_parsed(self, username: str, depth: int, following: List[str],
             movies: List[str]) -> None:
         """
         This method creates a profile with the details passed as parameter.
@@ -84,10 +87,11 @@ class ProfileCrawler:
         queue to be processed in the future.
         """
         for f in following:
-            self.enqueue(f)
+            self.enqueue(f, depth + 1)
 
-        p = Profile(username, following, movies)
+        p = Profile(username, depth, following, movies)
         with self.lock_:
+            print(p.username, p.depth)
             self.parsed_.add(p)
             self.ongoing_.discard(p)
 
@@ -113,8 +117,8 @@ class ProfileCrawler:
         def repr_set(s):
             def repr_p(p):
                 if p.isEmpty():
-                    return p.username
-                return (p.username, p.following, p.movies)
+                    return (p.username, p.depth)
+                return (p.username, p.depth, p.following, p.movies)
 
             return  [repr_p(p) for p in s]
 
@@ -127,10 +131,10 @@ class ProfileCrawler:
         d = json.loads(data)
         self.queued_ = set()
         for p in d["queued"]:
-            self.queued_.add(Profile(p[0]))
+            self.queued_.add(Profile(p[0], p[1]))
 
         for p in d["ongoing"]:
-            self.ongoing_.add(Profile(p[0]))
+            self.ongoing_.add(Profile(p[0], p[1]))
 
         for p in d["parsed"]:
-            self.parsed_.add(Profile(p[0], p[1], p[2]))
+            self.parsed_.add(Profile(p[0], p[1], p[2], p[3]))

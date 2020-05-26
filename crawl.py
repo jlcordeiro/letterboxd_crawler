@@ -23,16 +23,16 @@ def crawl(profiles, profile, page_next, parser):
     return result 
 
 def crawl_profile(profiles, source_profile):
-    following = crawl(profiles, source_profile,
-                      source_profile + "/following/page/1",
+    following = crawl(profiles, source_profile.username,
+                      source_profile.username + "/following/page/1",
                       parse.following)
 
-    movies = crawl(profiles, source_profile,
-                   source_profile + "/films/page/1",
+    movies = crawl(profiles, source_profile.username,
+                   source_profile.username + "/films/page/1",
                    parse.movies_watched)
 
     if following and movies:
-        profiles.on_parsed(source_profile, following, movies)
+        profiles.on_parsed(source_profile.username, source_profile.depth, following, movies)
 
 class LbThread (threading.Thread):
     def __init__(self, profiles, thread_id):
@@ -46,7 +46,7 @@ class LbThread (threading.Thread):
             if profile is None:
                 time.sleep(.5)
             else:
-                crawl_profile(self.profiles, profile.username)
+                crawl_profile(self.profiles, profile)
 
 
 def main(argv=None):

@@ -103,7 +103,7 @@ class TestProfileCrawler(unittest.TestCase):
         c.ongoing_ = {Profile("ongoing1"), Profile("ongoing2")}
         c.queued_ = {Profile("q1"), Profile("q2"), Profile("q3")}
 
-        c.on_parsed("ongoing2",
+        c.on_parsed("ongoing2", 0,
                     ["newp1", "newp2", "newp3", "parsed2",
                         "ongoing1", "ongoing2"],
                     [])
@@ -129,7 +129,7 @@ class TestProfileCrawler(unittest.TestCase):
         {
           "parsed": [
             [
-              "carolina_ab",
+              "carolina_ab", 1,
               [
                 "inesgoncalves",
                 "nunoabreu",
@@ -139,7 +139,7 @@ class TestProfileCrawler(unittest.TestCase):
               []
             ],
             [
-              "jlcordeiro",
+              "jlcordeiro", 0,
               [
                 "dunkeey",
                 "gonfsilva",
@@ -154,10 +154,10 @@ class TestProfileCrawler(unittest.TestCase):
             ]
           ],
           "queued": [
-            ["ingridgoeswest"],
-            ["gonfsilva"],
-            ["kika"],
-            ["flacerda"]
+            ["ingridgoeswest", 2],
+            ["gonfsilva", 2],
+            ["kika", 2],
+            ["flacerda", 2]
           ],
           "ongoing": []
         }
@@ -199,17 +199,16 @@ class TestProfileCrawler(unittest.TestCase):
 
         self.assertEqual([], d["parsed"])
         self.assertEqual([], d["ongoing"])
+        self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
 
-        self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
-
-        c.on_parsed("p4", ["p1", "p2"], [])
+        c.on_parsed("p4", 0, ["p1", "p2"], [])
         d = c.dump()
 
         self.assertEqual(1, len(d["parsed"]))
         self.assertEqual("p4", d["parsed"][0][0])
-        self.assertEqual({"p1", "p2"}, set(d["parsed"][0][1]))
+        self.assertEqual({"p1", "p2"}, set(d["parsed"][0][2]))
         self.assertEqual([], d["ongoing"])
-        self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
+        self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
 
 
 if __name__ == '__main__':
