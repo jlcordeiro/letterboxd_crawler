@@ -154,10 +154,10 @@ class TestProfileCrawler(unittest.TestCase):
             ]
           ],
           "queued": [
-            ["ingridgoeswest", null, null],
-            ["gonfsilva", null, null],
-            ["kika", null, null],
-            ["flacerda", null, null]
+            ["ingridgoeswest"],
+            ["gonfsilva"],
+            ["kika"],
+            ["flacerda"]
           ],
           "ongoing": []
         }
@@ -200,7 +200,7 @@ class TestProfileCrawler(unittest.TestCase):
         self.assertEqual([], d["parsed"])
         self.assertEqual([], d["ongoing"])
 
-        self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
+        self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
 
         c.on_parsed("p4", ["p1", "p2"], [])
         d = c.dump()
@@ -209,7 +209,7 @@ class TestProfileCrawler(unittest.TestCase):
         self.assertEqual("p4", d["parsed"][0][0])
         self.assertEqual({"p1", "p2"}, set(d["parsed"][0][1]))
         self.assertEqual([], d["ongoing"])
-        self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
+        self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
 
 
 if __name__ == '__main__':

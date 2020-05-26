@@ -111,7 +111,12 @@ class ProfileCrawler:
     def dump(self) -> Dict:
         """ Dump the whole internal stte as a dictionary. """
         def repr_set(s):
-            return  [(p.username, p.following, p.movies) for p in s]
+            def repr_p(p):
+                if p.isEmpty():
+                    return p.username
+                return (p.username, p.following, p.movies)
+
+            return  [repr_p(p) for p in s]
 
         return {"parsed": repr_set(self.parsed_),
                 "queued": repr_set(self.queued_),
@@ -122,10 +127,10 @@ class ProfileCrawler:
         d = json.loads(data)
         self.queued_ = set()
         for p in d["queued"]:
-            self.queued_.add(Profile(p[0], p[1], p[2]))
+            self.queued_.add(Profile(p[0]))
 
         for p in d["ongoing"]:
-            self.ongoing_.add(Profile(p[0], p[1], p[2]))
+            self.ongoing_.add(Profile(p[0]))
 
         for p in d["parsed"]:
             self.parsed_.add(Profile(p[0], p[1], p[2]))
