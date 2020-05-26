@@ -1,6 +1,6 @@
 import json
 import threading
-from typing import Dict, List, Set, Union
+from typing import Dict, List, Set, Union, Tuple
 
 class Profile:
     """
@@ -9,7 +9,7 @@ class Profile:
     """
     def __init__(self, username: str,
             following: List[str] = None,
-            movies: List[str] = None):
+            movies: List[Tuple[str, int]] = None):
 
         self.username = username
         self.following = following
