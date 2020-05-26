@@ -1,18 +1,22 @@
 import json
 import threading
-
+from typing import List
 
 class Profile:
     """
     Class that contains all the data relative to a
     Letterboxd profile / account.
     """
-    def __init__(self, username, following=None, movies=None):
+    def __init__(self, username: str,
+            following: List[str] = None,
+            movies: List[str] = None):
+
         self.username = username
         self.following = following
         self.movies = movies
 
-    def isEmpty(self):
+    def isEmpty(self) -> bool:
+        """ Check whether or not the profile is empty / not parsed. """
         return self.following is None or self.movies is None
 
     def __hash__(self):
