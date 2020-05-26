@@ -1,6 +1,7 @@
 import json
 import unittest
 from lmatch import profile_crawler
+Profile = profile_crawler.Profile
 
 
 class ProfileCrawler(unittest.TestCase):
@@ -10,7 +11,7 @@ class ProfileCrawler(unittest.TestCase):
     def test_ctor(self):
         c = profile_crawler.ProfileCrawler()
         self.assertEqual(0, len(c.parsed_profiles))
-        self.assertEqual(0, len(c.queued_usernames))
+        self.assertEqual(0, len(c.queued_))
         self.assertEqual(0, len(c.ongoing_usernames))
         self.assertEqual(True, c.keep_parsing)
 
@@ -26,7 +27,7 @@ class ProfileCrawler(unittest.TestCase):
         c = profile_crawler.ProfileCrawler()
         c.parsed_profiles = {1, 2, 3}  # put some junk in
         c.ongoing_usernames = {"a", "b", "c"}
-        c.queued_usernames = {"d", "e", "f"}
+        c.queued_ = {Profile("d"), Profile("e"), Profile("f")}
 
         c.cancel_ongoing_jobs()
 
@@ -38,8 +39,9 @@ class ProfileCrawler(unittest.TestCase):
         self.assertEqual(0, len(c.ongoing_usernames))
 
         # ... and moved to queued
-        self.assertEqual(6, len(c.queued_usernames))
-        self.assertEqual({"a", "b", "c", "d", "e", "f"}, c.queued_usernames)
+        self.assertEqual(6, len(c.queued_))
+        self.assertEqual({Profile("a"), Profile("b"), Profile("c"),
+            Profile("d"), Profile("e"), Profile("f")}, c.queued_)
 
     def test_enqueue(self):
         c = profile_crawler.ProfileCrawler()
@@ -49,17 +51,17 @@ class ProfileCrawler(unittest.TestCase):
 
         # check that a new username is added to the queue
         c.enqueue("jack")
-        self.assertEqual({"jack"}, c.queued_usernames)
+        self.assertEqual({Profile("jack")}, c.queued_)
         c.enqueue("john")
         c.enqueue("jess")
-        self.assertEqual({"john", "jess", "jack"}, c.queued_usernames)
+        self.assertEqual({Profile("john"), Profile("jess"), Profile("jack")}, c.queued_)
         # but one that was seen before isn't
         c.enqueue("joe")  # same as put on the set of parsed profiles
-        self.assertEqual({"john", "jess", "jack"}, c.queued_usernames)
+        self.assertEqual({Profile("john"), Profile("jess"), Profile("jack")}, c.queued_)
         # and just adding one that exists in the queue, obviously does nothing
         c.enqueue("john")
         c.enqueue("jess")
-        self.assertEqual({"john", "jess", "jack"}, c.queued_usernames)
+        self.assertEqual({Profile("john"), Profile("jess"), Profile("jack")}, c.queued_)
 
     def test_next_job(self):
         c = profile_crawler.ProfileCrawler()
@@ -69,25 +71,25 @@ class ProfileCrawler(unittest.TestCase):
         c.enqueue("p3")
 
         # quick sanity check
-        self.assertEqual(3, len(c.queued_usernames))
+        self.assertEqual(3, len(c.queued_))
         self.assertEqual(0, len(c.ongoing_usernames))
 
         job1 = c.next_job()
         self.assertEqual({job1}, c.ongoing_usernames)
-        self.assertTrue(job1 not in c.queued_usernames)
+        self.assertTrue(job1 not in c.queued_)
 
         job2 = c.next_job()
-        self.assertTrue(job1 not in c.queued_usernames)
-        self.assertTrue(job2 not in c.queued_usernames)
+        self.assertTrue(job1 not in c.queued_)
+        self.assertTrue(job2 not in c.queued_)
         self.assertEqual({job1, job2}, c.ongoing_usernames)
 
         job3 = c.next_job()
-        self.assertTrue(job1 not in c.queued_usernames)
-        self.assertTrue(job2 not in c.queued_usernames)
-        self.assertTrue(job3 not in c.queued_usernames)
+        self.assertTrue(job1 not in c.queued_)
+        self.assertTrue(job2 not in c.queued_)
+        self.assertTrue(job3 not in c.queued_)
         self.assertEqual({job1, job2, job3}, c.ongoing_usernames)
 
-        self.assertEqual(0, len(c.queued_usernames))
+        self.assertEqual(0, len(c.queued_))
         self.assertEqual(3, len(c.ongoing_usernames))
         self.assertEqual(None, c.next_job())
 
@@ -98,7 +100,7 @@ class ProfileCrawler(unittest.TestCase):
                              profile_crawler.Profile("parsed2"),
                              profile_crawler.Profile("parsed3")}
         c.ongoing_usernames = {"ongoing1", "ongoing2"}
-        c.queued_usernames = {"q1", "q2", "q3"}
+        c.queued_ = {"q1", "q2", "q3"}
 
         c.on_parsed("ongoing2",
                     ["newp1", "newp2", "newp3", "parsed2",
@@ -112,13 +114,13 @@ class ProfileCrawler(unittest.TestCase):
                         in c.parsed_profiles)
 
         # other users seen should be queued
-        self.assertTrue("newp1" in c.queued_usernames)
-        self.assertTrue("newp3" in c.queued_usernames)
+        self.assertTrue(Profile("newp1") in c.queued_)
+        self.assertTrue(Profile("newp3") in c.queued_)
         # unless they've been parsed already
-        self.assertTrue("parsed2" not in c.queued_usernames)
+        self.assertTrue(Profile("parsed2") not in c.queued_)
         # or even on one of the other sets
-        self.assertTrue("ongoing1" not in c.queued_usernames)
-        self.assertTrue("ongoing2" not in c.queued_usernames)
+        self.assertTrue(Profile("ongoing1") not in c.queued_)
+        self.assertTrue(Profile("ongoing2") not in c.queued_)
 
     def test_laod(self):
         c = profile_crawler.ProfileCrawler()
@@ -151,18 +153,19 @@ class ProfileCrawler(unittest.TestCase):
             ]
           ],
           "queued": [
-            "ingridgoeswest",
-            "gonfsilva",
-            "kika",
-            "flacerda"
+            ["ingridgoeswest", null, null],
+            ["gonfsilva", null, null],
+            ["kika", null, null],
+            ["flacerda", null, null]
           ],
           "ongoing": []
         }
         """)
 
         self.assertEqual(set(), c.ongoing_usernames)
-        self.assertEqual({"ingridgoeswest", "gonfsilva", "kika", "flacerda"},
-                         c.queued_usernames)
+        self.assertEqual({Profile("ingridgoeswest"), Profile("gonfsilva"),
+            Profile("kika"), Profile("flacerda")},
+                         c.queued_)
 
         self.assertEqual(2, len(c.parsed_profiles))
         self.assertTrue(profile_crawler.Profile("carolina_ab")
@@ -195,7 +198,8 @@ class ProfileCrawler(unittest.TestCase):
 
         self.assertEqual([], d["parsed"])
         self.assertEqual([], d["ongoing"])
-        self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
+
+        self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
 
         c.on_parsed("p4", ["p1", "p2"], [])
         d = c.dump()
@@ -204,7 +208,7 @@ class ProfileCrawler(unittest.TestCase):
         self.assertEqual("p4", d["parsed"][0][0])
         self.assertEqual({"p1", "p2"}, set(d["parsed"][0][1]))
         self.assertEqual([], d["ongoing"])
-        self.assertEqual({"p1", "p2", "p3"}, set(d["queued"]))
+        self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
 
 
 if __name__ == '__main__':

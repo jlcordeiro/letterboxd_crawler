@@ -25,6 +25,8 @@ class Profile:
     def __eq__(self, other):
         return self.username == other.username
 
+    def __repr__(self):
+        return (self.username)
 
 class ProfileCrawler:
     """
@@ -39,7 +41,7 @@ class ProfileCrawler:
     def __init__(self):
         self.lock_ = threading.Lock()
         self.parsed_profiles: Set[Profile] = set()
-        self.queued_usernames: Set[str] = set()
+        self.queued_: Set[Profile] = set()
         self.ongoing_usernames: Set[str] = set()
         self.keep_parsing = True
 
@@ -58,7 +60,7 @@ class ProfileCrawler:
         with self.lock_:
             while len(self.ongoing_usernames):
                 cancelled_username = self.ongoing_usernames.pop()
-                self.queued_usernames.add(cancelled_username)
+                self.queued_.add(Profile(cancelled_username))
 
     def enqueue(self, username: str) -> None:
         """
@@ -69,7 +71,7 @@ class ProfileCrawler:
         with self.lock_:
             if username not in self.ongoing_usernames \
                     and Profile(username) not in self.parsed_profiles:
-                self.queued_usernames.add(username)
+                self.queued_.add(Profile(username))
 
     def on_parsed(self, username: str, following: List[str],
             movies: List[str]) -> None:
@@ -100,24 +102,28 @@ class ProfileCrawler:
         the client does something with it.
         """
         with self.lock_:
-            if len(self.queued_usernames) == 0:
+            if len(self.queued_) == 0:
                 return None
 
-            popped_username = self.queued_usernames.pop()
+            popped_username = self.queued_.pop().username
             self.ongoing_usernames.add(popped_username)
             return popped_username
 
     def dump(self) -> Dict:
         """ Dump the whole internal stte as a dictionary. """
-        return {"parsed": [(p.username, p.following, p.movies)
-                           for p in self.parsed_profiles],
-                "queued": list(self.queued_usernames),
+        def repr_set(s):
+            return  [(p.username, p.following, p.movies) for p in s]
+
+        return {"parsed": repr_set(self.parsed_profiles),
+                "queued": repr_set(self.queued_),
                 "ongoing": list(self.ongoing_usernames)}
 
     def loads(self, data: str) -> None:
         """ Load state from a string. """
         d = json.loads(data)
-        self.queued_usernames = set(d["queued"])
+        self.queued_ = set()
+        for p in d["queued"]:
+            self.queued_.add(Profile(p[0], p[1], p[2]))
         self.ongoing_usernames = set(d["ongoing"])
 
         for p in d["parsed"]:

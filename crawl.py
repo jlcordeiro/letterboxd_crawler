@@ -1,7 +1,6 @@
 import sys
 import json
 import time
-import pymongo
 import argparse
 import threading
 from requests import session
@@ -10,7 +9,7 @@ from lmatch import profile_crawler, parse
 s = session()
 
 def crawl(profiles, profile, page_next, parser):
-    print(profile)
+    print("> ", profile)
     base_url = "https://letterboxd.com/"
     result = []
     while page_next is not None:
@@ -32,7 +31,8 @@ def crawl_profile(profiles, source_profile):
                    source_profile + "/films/page/1",
                    parse.movies_watched)
 
-    profiles.on_parsed(source_profile, following, movies)
+    if following and movies:
+        profiles.on_parsed(source_profile, following, movies)
 
 class LbThread (threading.Thread):
     def __init__(self, profiles, thread_id):
@@ -82,7 +82,7 @@ def main(argv=None):
         while True:
             print("{} parsed. {} ongoing. {} queued.".format(len(crawler.parsed_profiles),
                                                              len(crawler.ongoing_usernames),
-                                                             len(crawler.queued_usernames)))
+                                                             len(crawler.queued_)))
             time.sleep(10)
 
             # all threads stopped
