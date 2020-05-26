@@ -1,3 +1,3 @@
 [ ] requirements.txt
-[ ] consider type hints
-[ ] add option to search only up to certain depth
+[x] consider type hints
+[x] add option to search only up to certain depth

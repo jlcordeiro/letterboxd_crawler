@@ -9,7 +9,6 @@ from lmatch import profile_crawler, parse
 s = session()
 
 def crawl(profiles, profile, page_next, parser):
-    print("> ", profile)
     base_url = "https://letterboxd.com/"
     result = []
     while page_next is not None:
@@ -35,16 +34,19 @@ def crawl_profile(profiles, source_profile):
         profiles.on_parsed(source_profile.username, source_profile.depth, following, movies)
 
 class LbThread (threading.Thread):
-    def __init__(self, profiles, thread_id):
+    def __init__(self, profiles, thread_id, max_depth = None):
         threading.Thread.__init__(self)
         self.profiles = profiles
         self.thread_id = thread_id
+        self.max_depth = max_depth
 
     def run(self):
         while self.profiles.keep_parsing is True:
             profile = self.profiles.next_job()
             if profile is None:
                 time.sleep(.5)
+            elif profile.depth > self.max_depth:
+                return
             else:
                 crawl_profile(self.profiles, profile)
 
@@ -73,8 +75,8 @@ def main(argv=None):
         crawler.enqueue(first_profile)
 
     threads = []
-    for i in range(4):
-        thread = LbThread(crawler, i + 1)
+    for i in range(40):
+        thread = LbThread(crawler, i + 1, 1)
         thread.start()
         threads.append(thread)
 
