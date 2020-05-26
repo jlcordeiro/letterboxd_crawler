@@ -1,6 +1,6 @@
 import json
 import threading
-from typing import List
+from typing import Dict, List, Set, Union
 
 class Profile:
     """
@@ -38,17 +38,17 @@ class ProfileCrawler:
     """
     def __init__(self):
         self.lock_ = threading.Lock()
-        self.parsed_profiles = set()
-        self.queued_usernames = set()
-        self.ongoing_usernames = set()
+        self.parsed_profiles: Set[Profile] = set()
+        self.queued_usernames: Set[str] = set()
+        self.ongoing_usernames: Set[str] = set()
         self.keep_parsing = True
 
-    def stop_parsing(self):
+    def stop_parsing(self) -> None:
         """ Flag to anyone using the crawler that they should stop. """
         with self.lock_:
             self.keep_parsing = False
 
-    def cancel_ongoing_jobs(self):
+    def cancel_ongoing_jobs(self) -> None:
         """
         Move all jobs / profiles being parsed back to the queue. Whatever
         was already parsed is lost.
@@ -60,7 +60,7 @@ class ProfileCrawler:
                 cancelled_username = self.ongoing_usernames.pop()
                 self.queued_usernames.add(cancelled_username)
 
-    def enqueue(self, username):
+    def enqueue(self, username: str) -> None:
         """
         Adds a user name to the list of profiles to be queued and processed
         later. If this profile has been parsed in the past, the method
@@ -71,7 +71,8 @@ class ProfileCrawler:
                     and Profile(username) not in self.parsed_profiles:
                 self.queued_usernames.add(username)
 
-    def on_parsed(self, username, following, movies):
+    def on_parsed(self, username: str, following: List[str],
+            movies: List[str]) -> None:
         """
         This method creates a profile with the details passed as parameter.
         The profile is put on the list of parsed profiles and its
@@ -89,7 +90,7 @@ class ProfileCrawler:
             self.parsed_profiles.add(p)
             self.ongoing_usernames.discard(username)
 
-    def next_job(self):
+    def next_job(self) -> Union[None, str]:
         """
         Get a "random" job out of the queue of profiles. If there are
         no profiles waiting, returns None.
@@ -106,16 +107,16 @@ class ProfileCrawler:
             self.ongoing_usernames.add(popped_username)
             return popped_username
 
-    def dump(self):
+    def dump(self) -> Dict:
         """ Dump the whole internal stte as a dictionary. """
         return {"parsed": [(p.username, p.following, p.movies)
                            for p in self.parsed_profiles],
                 "queued": list(self.queued_usernames),
                 "ongoing": list(self.ongoing_usernames)}
 
-    def loads(self, str):
+    def loads(self, data: str) -> None:
         """ Load state from a string. """
-        d = json.loads(str)
+        d = json.loads(data)
         self.queued_usernames = set(d["queued"])
         self.ongoing_usernames = set(d["ongoing"])
 
