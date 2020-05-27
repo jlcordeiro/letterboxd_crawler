@@ -29,6 +29,10 @@ def main(argv=None):
         if p.username == first_profile:
             main_profile = p
 
+    if main_profile is None:
+        print("User not found.")
+        sys.exit(1)
+
     main_movies = {k: v for (k, v) in main_profile.movies if v}
 
     matches = []
