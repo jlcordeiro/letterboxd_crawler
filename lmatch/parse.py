@@ -1,5 +1,6 @@
 from typing import List, Tuple, Union
 
+
 def _extract_value(data, key: str, start: int) -> Tuple[int, int, str]:
     """ Find and extract <value> out of a
         ..key": "<value>"....

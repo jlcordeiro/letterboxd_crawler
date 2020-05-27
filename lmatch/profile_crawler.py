@@ -2,16 +2,18 @@ import json
 import threading
 from typing import Dict, List, Set, Union, Tuple
 
+
 class Profile:
     """
     Class that contains all the data relative to a
     Letterboxd profile / account.
     """
+
     def __init__(self,
-            username: str,
-            depth: int = 0,
-            following: List[str] = None,
-            movies: List[Tuple[str, int]] = None):
+                 username: str,
+                 depth: int = 0,
+                 following: List[str] = None,
+                 movies: List[Tuple[str, int]] = None):
 
         self.username = username
         self.depth = depth
@@ -31,6 +33,7 @@ class Profile:
     def __repr__(self):
         return (self.username)
 
+
 class ProfileCrawler:
     """
     Class that wraps the logic behind crawling Letterboxd. Maintains
@@ -41,6 +44,7 @@ class ProfileCrawler:
 
     This class is thread-safe.
     """
+
     def __init__(self):
         self.lock_ = threading.Lock()
         self.parsed_: Set[Profile] = set()
@@ -76,7 +80,7 @@ class ProfileCrawler:
                 self.queued_.add(Profile(username, depth))
 
     def on_parsed(self, username: str, depth: int, following: List[str],
-            movies: List[str]) -> None:
+                  movies: List[str]) -> None:
         """
         This method creates a profile with the details passed as parameter.
         The profile is put on the list of parsed profiles and its
@@ -120,7 +124,7 @@ class ProfileCrawler:
                     return (p.username, p.depth)
                 return (p.username, p.depth, p.following, p.movies)
 
-            return  [repr_p(p) for p in s]
+            return [repr_p(p) for p in s]
 
         return {"parsed": repr_set(self.parsed_),
                 "queued": repr_set(self.queued_),

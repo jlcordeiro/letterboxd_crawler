@@ -10,6 +10,7 @@ This code has no commercial use and is purely an academic exercise.
 
 Check PEP8:
 ```
-python -m pycodestyle lmatch/*.py
-python -m unittest discover tests
+python3 -m autopep8 --in-place --aggressive --aggressive lmatch/*.py
+python3 -m pycodestyle lmatch/*.py
+python3 -m unittest discover tests
 ```
