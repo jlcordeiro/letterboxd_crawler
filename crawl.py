@@ -8,9 +8,10 @@ from lmatch import profile_crawler, parse
 
 s = session()
 
-def crawl(profiles, profile, page_next, parser):
+def crawl(profiles, profile, first_page, parser):
     base_url = "https://letterboxd.com/"
     result = []
+    page_next = first_page
     while page_next is not None:
         if profiles.keep_parsing is False:
             return None
@@ -19,7 +20,7 @@ def crawl(profiles, profile, page_next, parser):
         result.extend(parser(r.text))
         page_next = parse.next_page(r.text)
 
-    return result 
+    return result
 
 def crawl_profile(profiles, source_profile):
     following = crawl(profiles, source_profile.username,
@@ -76,7 +77,7 @@ def main(argv=None):
 
     threads = []
     for i in range(40):
-        thread = LbThread(crawler, i + 1, 1)
+        thread = LbThread(crawler, i + 1, 3)
         thread.start()
         threads.append(thread)
 
