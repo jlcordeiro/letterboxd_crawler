@@ -127,8 +127,7 @@ class ProfileCrawler:
             return [repr_p(p) for p in s]
 
         return {"parsed": repr_set(self.parsed_),
-                "queued": repr_set(self.queued_),
-                "ongoing": repr_set(self.ongoing_)}
+                "queued": repr_set(self.queued_)}
 
     def loads(self, data: str) -> None:
         """ Load state from a string. """
@@ -136,9 +135,6 @@ class ProfileCrawler:
         self.queued_ = set()
         for p in d["queued"]:
             self.queued_.add(Profile(p[0], p[1]))
-
-        for p in d["ongoing"]:
-            self.ongoing_.add(Profile(p[0], p[1]))
 
         for p in d["parsed"]:
             self.parsed_.add(Profile(p[0], p[1], p[2], p[3]))

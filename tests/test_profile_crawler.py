@@ -198,7 +198,6 @@ class TestProfileCrawler(unittest.TestCase):
         d = c.dump()
 
         self.assertEqual([], d["parsed"])
-        self.assertEqual([], d["ongoing"])
         self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
 
         c.on_parsed("p4", 0, ["p1", "p2"], [])
@@ -207,7 +206,6 @@ class TestProfileCrawler(unittest.TestCase):
         self.assertEqual(1, len(d["parsed"]))
         self.assertEqual("p4", d["parsed"][0][0])
         self.assertEqual({"p1", "p2"}, set(d["parsed"][0][2]))
-        self.assertEqual([], d["ongoing"])
         self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
 
 

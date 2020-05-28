@@ -23,3 +23,7 @@ class TestProfile(unittest.TestCase):
 
         p2 = Profile("j", 0, [], [])
         self.assertEqual(p2.isEmpty(), False)
+
+    def test_reptr(self):
+        p1 = Profile("j", 0)
+        self.assertEqual("j", repr(p1))
