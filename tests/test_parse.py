@@ -61,6 +61,15 @@ class Parse(unittest.TestCase):
         self.assertEqual(("the-equalizer-2", 10), movies[-7])
         self.assertEqual(("jurassic-world-fallen-kingdom", 0), movies[-1])
 
+    def test_parse_film(self):
+        page = self.html_open("tests/data/film_the-way-back-2020.html")
+        film = parse.parse_film(page)
+
+        self.assertEqual(film.id, 458743)
+        self.assertEqual(film.url, "/film/the-way-back-2020/")
+        self.assertEqual(film.name, "The Way Back")
+        self.assertEqual(film.avg_rate, 6.78)
+
 
 if __name__ == '__main__':
     unittest.main()

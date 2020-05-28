@@ -104,3 +104,22 @@ def movies_watched(page: str) -> List[Tuple[str, int]]:
             movies.append((movie_name[:-1], int(movie_rate)))
 
     return movies
+
+from lmatch import film
+def parse_film(page: str) -> film.Film:
+    """ Given a Letterboxd 'film' page, parses out the
+    film details.
+    """
+
+    tag_id = "filmData = { id: "
+    start = 1
+    start = page.find(tag_id, start) + len(tag_id)
+    end = page.find(", ", start)
+    id = int(page[start:end])
+
+    (start, end, name) = (_extract_value(page, "name: \"", start))
+    (start, end, path) = (_extract_value(page, "path: \"", start))
+    (start, end, avg_rate) = (_extract_value(page, "ratingValue\":", start))
+    avg_rate = float(avg_rate[:-1]) * 2
+
+    return film.Film(id, path, name, avg_rate)
