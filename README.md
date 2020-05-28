@@ -8,8 +8,4 @@ This code has no commercial use and is purely an academic exercise.
 
 # Running
 
-Check PEP8:
-```
-python3 -m autopep8 --in-place --aggressive --aggressive lmatch/*.py
-python3 -m pycodestyle lmatch/*.py
-```
+TODO

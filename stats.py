@@ -9,19 +9,18 @@ from lmatch import profile_crawler, parse
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "letterboxd_url",
+        "first_profile",
         metavar="LETTERBOXD_PROFILE",
-        help="URL of your letterboxd profile",
+        help="username for which we want to generate stats.",
     )
     args = parser.parse_args(argv)
-    first_profile = args.letterboxd_url
+    first_profile = args.first_profile
 
     crawler = profile_crawler.ProfileCrawler()
 
     dump_filename = 'dump.lmatch'
     with open(dump_filename, 'r') as infile:
-        str = infile.read()
-        crawler.loads(str)
+        crawler.loads(infile.read())
         infile.close()
 
     main_profile = None

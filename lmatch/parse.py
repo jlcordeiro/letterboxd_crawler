@@ -82,8 +82,8 @@ def movies_watched(page: str) -> List[Tuple[str, int]]:
     movies = []
 
     tag_movie_container = "poster-container"
-    tag_movie_name = "data-target-link=\"/film/"
-    tag_movie_rate = " rated-"
+    tag_name = "data-target-link=\"/film/"
+    tag_rate = " rated-"
 
     start = 1
     while start > 0:
@@ -94,8 +94,8 @@ def movies_watched(page: str) -> List[Tuple[str, int]]:
             # detect where to stop
             stop_at = page.find(tag_movie_container, start + 3)
 
-            (start, _, movie_name) = _extract_value(page, tag_movie_name, start)
-            (_, start, movie_rate) = _extract_value(page, tag_movie_rate, start)
+            (start, _, movie_name) = _extract_value(page, tag_name, start)
+            (_, start, movie_rate) = _extract_value(page, tag_rate, start)
 
             if start > stop_at or start is -1:
                 start = stop_at - 1

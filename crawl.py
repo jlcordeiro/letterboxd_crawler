@@ -55,25 +55,21 @@ class LbThread (threading.Thread):
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "letterboxd_url",
+        "first_profile",
         metavar="LETTERBOXD_PROFILE",
-        help="URL of your letterboxd profile",
+        help="username of the profile to use as the top of the crawl tree",
     )
     args = parser.parse_args(argv)
-    first_profile = args.letterboxd_url
 
     crawler = profile_crawler.ProfileCrawler()
 
     dump_filename = 'dump.lmatch'
     try:
         with open(dump_filename, 'r') as infile:
-            print("Loading previous state.")
-            str = infile.read()
-            crawler.loads(str)
+            crawler.loads(infile.read())
             infile.close()
-            print("State successfully loaded.")
     except FileNotFoundError:
-        crawler.enqueue(first_profile)
+        crawler.enqueue(args.first_profile)
 
     threads = []
     for i in range(40):
