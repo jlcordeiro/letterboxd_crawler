@@ -32,7 +32,9 @@ def crawl_profile(profiles, source_profile):
                    parse.movies_watched)
 
     if following and movies:
-        profiles.on_parsed(source_profile.username, source_profile.depth, following, movies)
+        movies_dict = {k: v for (k, v) in movies}
+        profiles.on_parsed(source_profile.username, source_profile.depth,
+                following, movies_dict)
 
 class LbThread (threading.Thread):
     def __init__(self, profiles, thread_id, max_depth = None):

@@ -13,7 +13,7 @@ class Profile:
                  username: str,
                  depth: int = 0,
                  following: List[str] = None,
-                 movies: List[Tuple[str, int]] = None):
+                 movies: Dict[str, int] = None):
 
         self.username = username
         self.depth = depth
@@ -80,7 +80,7 @@ class ProfileCrawler:
                 self.queued_.add(Profile(username, depth))
 
     def on_parsed(self, username: str, depth: int, following: List[str],
-                  movies: List[str]) -> None:
+                  movies: Dict[str, int]) -> None:
         """
         This method creates a profile with the details passed as parameter.
         The profile is put on the list of parsed profiles and its

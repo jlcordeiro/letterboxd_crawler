@@ -1,3 +1,4 @@
+from lmatch import film
 from typing import List, Tuple, Union
 
 
@@ -105,7 +106,7 @@ def movies_watched(page: str) -> List[Tuple[str, int]]:
 
     return movies
 
-from lmatch import film
+
 def parse_film(page: str) -> film.Film:
     """ Given a Letterboxd 'film' page, parses out the
     film details.

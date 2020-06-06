@@ -27,12 +27,11 @@ def main(argv=None):
     for p in crawler.parsed_:
         if p.username == first_profile:
             main_profile = p
+            break
 
     if main_profile is None:
         print("User not found.")
         sys.exit(1)
-
-    main_movies = {k: v for (k, v) in main_profile.movies if v}
 
     matches = []
     for p in crawler.parsed_:
@@ -41,11 +40,11 @@ def main(argv=None):
 
         deltas = []
 
-        for (this_name, this_rating) in p.movies:
-            if this_rating is 0 or this_name not in main_movies:
+        for this_name, this_rating in p.movies.items():
+            if this_rating is 0 or this_name not in main_profile.movies:
                 continue
 
-            (main_name, main_rating) = (this_name, main_movies[this_name])
+            (main_name, main_rating) = (this_name, main_profile.movies[this_name])
             deltas.extend([this_rating - main_rating])
 
         matches.extend([[p.username,
