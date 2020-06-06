@@ -66,7 +66,7 @@ class Parse(unittest.TestCase):
         film = parse.parse_film(page)
 
         self.assertEqual(film.id, 458743)
-        self.assertEqual(film.url, "/film/the-way-back-2020/")
+        self.assertEqual(film.url, "the-way-back-2020")
         self.assertEqual(film.name, "The Way Back")
         self.assertEqual(film.avg_rate, 6.78)
 
