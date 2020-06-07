@@ -80,7 +80,7 @@ class ProfileCrawler:
                 self.queued_.add(Profile(username, depth))
 
     def on_parsed(self, username: str, depth: int, following: List[str],
-                  movies: Dict[str, int]) -> None:
+                  movies: Dict[int, float]) -> None:
         """
         This method creates a profile with the details passed as parameter.
         The profile is put on the list of parsed profiles and its
@@ -122,7 +122,8 @@ class ProfileCrawler:
             def repr_p(p):
                 if p.isEmpty():
                     return (p.username, p.depth)
-                return (p.username, p.depth, p.following, p.movies)
+                movies = [[k,v] for (k,v) in p.movies.items()]
+                return (p.username, p.depth, p.following, movies)
 
             return [repr_p(p) for p in s]
 
@@ -137,4 +138,5 @@ class ProfileCrawler:
             self.queued_.add(Profile(p[0], p[1]))
 
         for p in d["parsed"]:
-            self.parsed_.add(Profile(p[0], p[1], p[2], p[3]))
+            movies = {int(k): v for (k,v) in p[3]}
+            self.parsed_.add(Profile(p[0], p[1], p[2], movies))

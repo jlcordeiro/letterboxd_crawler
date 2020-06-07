@@ -147,9 +147,9 @@ class TestProfileCrawler(unittest.TestCase):
                 "siracusa"
               ],
               [
-                ["extraction-2020", 6 ],
-                [ "sinister", 6 ],
-                [ "breathless", 0 ]
+                [201, 6],
+                [202, 6],
+                [203, 0]
               ]
             ]
           ],
@@ -179,12 +179,12 @@ class TestProfileCrawler(unittest.TestCase):
                 self.assertEqual(
                         {"dunkeey", "gonfsilva", "nihilism", "siracusa"},
                         set(profile.following))
-                self.assertEqual( [['extraction-2020', 6], ['sinister', 6], ['breathless', 0]], profile.movies)
+                self.assertEqual( {201: 6, 202: 6, 203: 0}, profile.movies)
             else:
                 self.assertEqual(
                   {"inesgoncalves", "nunoabreu", "inesdelgado", "jlcordeiro"},
                   set(profile.following))
-                self.assertEqual([], profile.movies)
+                self.assertEqual({}, profile.movies)
 
         check_profile(c.parsed_.pop())
         check_profile(c.parsed_.pop())
@@ -200,7 +200,7 @@ class TestProfileCrawler(unittest.TestCase):
         self.assertEqual([], d["parsed"])
         self.assertEqual({"p1", "p2", "p3"}, set([p[0] for p in d["queued"]]))
 
-        c.on_parsed("p4", 0, ["p1", "p2"], [])
+        c.on_parsed("p4", 0, ["p1", "p2"], {})
         d = c.dump()
 
         self.assertEqual(1, len(d["parsed"]))
