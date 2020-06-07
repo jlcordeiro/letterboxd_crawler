@@ -121,6 +121,9 @@ def parse_film(page: str) -> film.Film:
     (start, end, name) = (_extract_value(page, "name: \"", start))
     (start, end, path) = (_extract_value(page, "path: \"/film/", start))
     (start, end, avg_rate) = (_extract_value(page, "ratingValue\":", start))
-    avg_rate = float(avg_rate[:-1]) * 2
+    try:
+        avg_rate = float(avg_rate[:-1]) * 2
+    except:
+        avg_rate = None
 
     return film.Film(id, path[:-1], name, avg_rate)
