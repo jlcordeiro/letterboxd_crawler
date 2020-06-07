@@ -70,6 +70,15 @@ class Parse(unittest.TestCase):
         self.assertEqual(film.name, "The Way Back")
         self.assertEqual(film.avg_rate, 6.78)
 
+    def test_parse_film_without_rating(self):
+        page = self.html_open("tests/data/film_when-i-rise.html")
+        film = parse.parse_film(page)
+
+        self.assertEqual(film.id, 129797)
+        self.assertEqual(film.url, "when-i-rise")
+        self.assertEqual(film.name, "When I Rise")
+        self.assertEqual(film.avg_rate, None)
+
 
 if __name__ == '__main__':
     unittest.main()
