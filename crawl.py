@@ -4,21 +4,60 @@ import time
 import argparse
 import threading
 from requests import session
-from lmatch import profile_crawler, parse
+from lmatch import profile_crawler, parse, dao, film
+
+
+class MovieFacade:
+    """
+    Class to bridge movies between crawler and database layer.
+    Inserts into DB if a movie has never been seen before.
+    Caches the url -> id mapping.
+    """
+    def __init__(self):
+        self.lock_ = threading.Lock()
+        self.hash_table_ = {}
+
+        def cacheOne(m):
+            self.hash_table_[m.url] = int(m.id)
+            print("Loaded ", m.url, " from db.")
+
+        self.db_ = dao.MovieDao()
+        self.db_.fetchAllMovies(lambda m: cacheOne(m))
+
+    def getId(self, movie_url):
+        with self.lock_:
+            # if the url hasn't been found yet, get it.
+            if movie_url not in self.hash_table_:
+                film = parse.parse_film(get_page('/film/' + movie_url))
+                self.db_.updateMovie(film)
+                self.hash_table_[movie_url] = int(film.id)
+
+            return self.hash_table_[movie_url]
+
+
+movie_facade = MovieFacade()
 
 s = session()
+def get_page(path):
+    print(":: ", path)
+    base_url = "https://letterboxd.com/"
+    return s.get(base_url + path).text
+
 
 def crawl(profiles, profile, first_page, parser):
-    base_url = "https://letterboxd.com/"
     result = []
     page_next = first_page
     while page_next is not None:
         if profiles.keep_parsing is False:
             return None
 
-        r = s.get(base_url + page_next)
-        result.extend(parser(r.text))
-        page_next = parse.next_page(r.text)
+        try:
+            page_text = get_page(page_next)
+        except:
+            return None
+
+        result.extend(parser(page_text))
+        page_next = parse.next_page(page_text)
 
     return result
 
@@ -32,9 +71,17 @@ def crawl_profile(profiles, source_profile):
                    parse.movies_watched)
 
     if following and movies:
-        movies_dict = {k: v for (k, v) in movies}
+
+        movie_id_to_rating = {}
+        for (url, rating) in movies:
+            try:
+                this_id = movie_facade.getId(url)
+                movie_id_to_rating[this_id] = rating
+            except:
+                print("Failed to get: {}.".format(movie_url))
+
         profiles.on_parsed(source_profile.username, source_profile.depth,
-                following, movies_dict)
+                following, movie_id_to_rating)
 
 class LbThread (threading.Thread):
     def __init__(self, profiles, thread_id, max_depth = None):
@@ -87,7 +134,7 @@ def main(argv=None):
             time.sleep(10)
 
             # all threads stopped
-            if not any([t.isAlive() for t in threads]):
+            if not any([t.is_alive() for t in threads]):
                 print("Ended successfully.")
                 break
     except KeyboardInterrupt:
