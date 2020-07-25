@@ -89,6 +89,7 @@ func TestParseMoviesWatched(t *testing.T) {
 			[]Rating{{"6-underground", 9},
 				{"the-equalizer-2", 10},
 				{"jurassic-world-fallen-kingdom", 0}}},
+		{"jlcordeiro_following_1.html", 0, []Rating{}},
 	}
 
 	for _, table := range tables {
@@ -118,10 +119,12 @@ func TestParseMoviesWatched(t *testing.T) {
 func TestParseMovie(t *testing.T) {
 	tables := []struct {
 		path  string
+		ok    bool
 		movie Movie
 	}{
-		{"film_the-way-back-2020.html", Movie{458743, "The Way Back", "the-way-back-2020", 6.78}},
-		{"film_when-i-rise.html", Movie{129797, "When I Rise", "when-i-rise", 0.0}},
+		{"film_the-way-back-2020.html", true, Movie{458743, "The Way Back", "the-way-back-2020", 6.78}},
+		{"film_when-i-rise.html", true, Movie{129797, "When I Rise", "when-i-rise", 0.0}},
+		{"jlcordeiro_following_1.html", false, Movie{}},
 	}
 
 	for _, table := range tables {
@@ -131,7 +134,7 @@ func TestParseMovie(t *testing.T) {
 		bytes, _ := ioutil.ReadAll(response.Body)
 
 		movie, ok := ParseMovie(string(bytes))
-		if !ok || table.movie != movie {
+		if ok != table.ok || table.movie != movie {
 			t.Error(movie)
 			t.Error(table.movie)
 		}
