@@ -41,6 +41,15 @@ func ParseFollowing(response *http.Response) []string {
 	return []string{}
 }
 
+// This struct represents a movie in the overall letterboxd system.
+type Movie struct {
+	id       int64
+	name     string
+	path     string
+	avg_rate float64
+}
+
+// Represents the rating given by someone to a specific movie.
 type Rating struct {
 	name string
 	rate int8
@@ -58,13 +67,6 @@ func ParseMoviesWatched(response *http.Response) []Rating {
 		ratings[i] = Rating{f[1], int8(rate)}
 	}
 	return ratings
-}
-
-type Movie struct {
-	id       int64
-	name     string
-	path     string
-	avg_rate float64
 }
 
 func ParseMovie(response *http.Response) (movie Movie, ok bool) {
