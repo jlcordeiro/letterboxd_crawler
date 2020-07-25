@@ -32,8 +32,9 @@ func TestParseNextPage(t *testing.T) {
 		w := httptest.NewRecorder()
 		buildMockResponse(w, "./tests/data/"+table.path)
 		response := w.Result()
+		bytes, _ := ioutil.ReadAll(response.Body)
 
-		result, ok := ParseNextPage(response)
+		result, ok := ParseNextPage(string(bytes))
 		if result != table.next || ok != table.ok {
 			t.Error(result)
 		}
@@ -61,8 +62,9 @@ func TestParseFollowing1(t *testing.T) {
 		w := httptest.NewRecorder()
 		buildMockResponse(w, table.path)
 		response := w.Result()
+		bytes, _ := ioutil.ReadAll(response.Body)
 
-		result := ParseFollowing(response)
+		result := ParseFollowing(string(bytes))
 		if reflect.DeepEqual(result, table.following) == false {
 			t.Error(result)
 		}
@@ -93,8 +95,9 @@ func TestParseMoviesWatched(t *testing.T) {
 		w := httptest.NewRecorder()
 		buildMockResponse(w, "./tests/data/"+table.path)
 		response := w.Result()
+		bytes, _ := ioutil.ReadAll(response.Body)
 
-		result := ParseMoviesWatched(response)
+		result := ParseMoviesWatched(string(bytes))
 		if len(result) != table.count_ratings {
 			t.Error(len(result))
 			t.Error(len(result))
@@ -127,8 +130,9 @@ func TestParseMovie(t *testing.T) {
 		w := httptest.NewRecorder()
 		buildMockResponse(w, "./tests/data/"+table.path)
 		response := w.Result()
+		bytes, _ := ioutil.ReadAll(response.Body)
 
-		movie, ok := ParseMovie(response)
+		movie, ok := ParseMovie(string(bytes))
 		if !ok || table.movie != movie {
 			t.Error(movie)
 			t.Error(table.movie)

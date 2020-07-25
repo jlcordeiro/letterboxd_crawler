@@ -1,26 +1,14 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
-	"net/http"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
-func getMatches(response *http.Response, regex string) [][]string {
-	bytes, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return nil
-	}
-
-	re := regexp.MustCompile(regex)
-	return re.FindAllStringSubmatch(string(bytes), -1)
-}
-
-func ParseNextPage(response *http.Response) (next_page string, ok bool) {
-	matches := getMatches(response, "paginate-nextprev.*?\"next\" href=\"/(.*?)\"")
+func ParseNextPage(page string) (next_page string, ok bool) {
+	re := regexp.MustCompile("paginate-nextprev.*?\"next\" href=\"/(.*?)\"")
+	matches := re.FindAllStringSubmatch(page, -1)
 	if matches != nil {
 		return matches[0][1], true
 	}
@@ -28,8 +16,9 @@ func ParseNextPage(response *http.Response) (next_page string, ok bool) {
 	return "", false
 }
 
-func ParseFollowing(response *http.Response) []string {
-	matches := getMatches(response, "table-person.*?href=\"/(.*?)/\"")
+func ParseFollowing(page string) []string {
+	re := regexp.MustCompile("table-person.*?href=\"/(.*?)/\"")
+	matches := re.FindAllStringSubmatch(page, -1)
 	if matches != nil {
 		following := make([]string, len(matches))
 		for i, f := range matches {
@@ -55,8 +44,9 @@ type Rating struct {
 	rate int8
 }
 
-func ParseMoviesWatched(response *http.Response) []Rating {
-	matches := getMatches(response, "poster film-poster.*data-target-link=\"/film/(.*?)/\".*rated-(.*?)\"")
+func ParseMoviesWatched(page string) []Rating {
+	re := regexp.MustCompile("poster film-poster.*data-target-link=\"/film/(.*?)/\".*rated-(.*?)\"")
+	matches := re.FindAllStringSubmatch(page, -1)
 	if matches == nil {
 		return []Rating{}
 	}
@@ -69,7 +59,7 @@ func ParseMoviesWatched(response *http.Response) []Rating {
 	return ratings
 }
 
-func ParseMovie(response *http.Response) (movie Movie, ok bool) {
+func ParseMovie(page string) (movie Movie, ok bool) {
 	// some films don't have average ratings yet and for those the page
 	// structure differes. hence we have 2 regex patterns here, one that
 	// searches for all details required and one that leaves the rating out.
@@ -82,19 +72,13 @@ func ParseMovie(response *http.Response) (movie Movie, ok bool) {
 	re_some := regexp.MustCompile(base_regex)
 	re_all := regexp.MustCompile(base_regex + ".*ratingValue\":(.*?),")
 
-	bytes, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return movie, false
-	}
-
-	content := string(bytes)
 	matches := [][]string{}
 
-	has_rating := strings.Index(content, "ratingValue") > 0
+	has_rating := strings.Index(page, "ratingValue") > 0
 	if has_rating {
-		matches = re_all.FindAllStringSubmatch(content, -1)
+		matches = re_all.FindAllStringSubmatch(page, -1)
 	} else {
-		matches = re_some.FindAllStringSubmatch(content, -1)
+		matches = re_some.FindAllStringSubmatch(page, -1)
 	}
 
 	if matches == nil {
@@ -113,10 +97,4 @@ func ParseMovie(response *http.Response) (movie Movie, ok bool) {
 	movie.avg_rate *= 2
 
 	return movie, true
-}
-
-func main() {
-	response, _ := http.Get("https://letterboxd.com/film/the-way-back-2020/")
-	defer response.Body.Close()
-	fmt.Println(ParseMovie(response))
 }
