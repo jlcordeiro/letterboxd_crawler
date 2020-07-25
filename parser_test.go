@@ -123,8 +123,6 @@ func TestParseMovie(t *testing.T) {
 		{"film_the-way-back-2020.html", Movie{458743, "The Way Back", "the-way-back-2020", 6.78}},
 		{"film_when-i-rise.html", Movie{129797, "When I Rise", "when-i-rise", 0.0}},
 	}
-	//self.assertEqual(film.avg_rate, 6.78)
-	//self.assertEqual(film.avg_rate, None)
 
 	for _, table := range tables {
 		w := httptest.NewRecorder()
