@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 )
 
 func getMatches(response *http.Response, regex string) [][]string {
@@ -67,19 +68,47 @@ type Movie struct {
 }
 
 func ParseMovie(response *http.Response) (movie Movie, ok bool) {
-	matches := getMatches(response, "(?s)filmData = .*?id: (.*?),.*?name: \"(.*?)\".*?path: \"/film/(.*?)/\"")
-	//matches := getMatches(response, "(?s)filmData = .*?id: (.*?),.*?name: \"(.*?)\".*?path: \"/film/(.*?)/\".*ratingValue\":(.*?),")
+	// some films don't have average ratings yet and for those the page
+	// structure differes. hence we have 2 regex patterns here, one that
+	// searches for all details required and one that leaves the rating out.
+	//
+	// scanning the page twice (only for the movies without rating) is
+	// definitely not optimal but for now I am leaving it like this as a more
+	// suffisticated parsing mechanism may be needed anyway depending on how
+	// the current performs vs the rest of the application.
+	base_regex := "(?s)filmData = .*?id: (.*?),.*?name: \"(.*?)\".*?path: \"/film/(.*?)/\""
+	re_some := regexp.MustCompile(base_regex)
+	re_all := regexp.MustCompile(base_regex + ".*ratingValue\":(.*?),")
+
+	bytes, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return movie, false
+	}
+
+	content := string(bytes)
+	matches := [][]string{}
+
+	has_rating := strings.Index(content, "ratingValue") > 0
+	if has_rating {
+		matches = re_all.FindAllStringSubmatch(content, -1)
+	} else {
+		matches = re_some.FindAllStringSubmatch(content, -1)
+	}
+
 	if matches == nil {
 		return movie, false
 	}
 
-	id, _ := strconv.Atoi(matches[0][1])
-	name := matches[0][2]
-	path := matches[0][3]
+	movie.id, _ = strconv.ParseInt(matches[0][1], 10, 64)
+	movie.name = matches[0][2]
+	movie.path = matches[0][3]
 
-	movie = Movie{int64(id), name, path, 0.0}
+	if has_rating {
+		movie.avg_rate, _ = strconv.ParseFloat(matches[0][4], 64)
+	}
 
-	//movie.avg_rate, _ = strconv.ParseFloat(matches[0][4], 64)
+	// this page keeps the rating in a 0-5 scale whilst we want a 1-10
+	movie.avg_rate *= 2
 
 	return movie, true
 }
