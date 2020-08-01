@@ -1,10 +1,13 @@
 package main
 
 import (
+	"container/list"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
+	"sync"
 )
 
 type Profile struct {
@@ -24,11 +27,21 @@ const (
 	FOLLOWING_PAGE
 )
 
+type Crawler struct {
+	mutex      sync.Mutex
+	to_process *List
+}
+
+func (c Crawler) enqueueEmptyProfile() {
+	c.mutex.Lock()
+	defer c.mutex.Unlock()
+}
+
 func buildFullUrl(relative_path string) string {
 	return "https://letterboxd.com/" + relative_path
 }
 
-func crawl(profile *Profile, url string, page_type PageType) {
+func downloadProfileSection(profile *Profile, url string, page_type PageType) {
 	fmt.Println(":: " + url)
 
 	full_url := buildFullUrl(url)
@@ -54,18 +67,21 @@ func crawl(profile *Profile, url string, page_type PageType) {
 		return
 	}
 
-	crawl(profile, next_page, page_type)
+	downloadProfileSection(profile, next_page, page_type)
+	return
 }
 
-func downloadProfile(username string) {
-	profile := Profile{username: username}
+func crawl(routine_name string, jobs <-chan string, results chan<- string) {
+	for username := range jobs {
+		profile := Profile{username: username}
 
-	crawl(&profile, username+"/following/page/1/", FOLLOWING_PAGE)
-	crawl(&profile, username+"/films/page/1/", WATCHED_PAGE)
+		downloadProfileSection(&profile, username+"/following/page/1/", FOLLOWING_PAGE)
+		downloadProfileSection(&profile, username+"/films/page/1/", WATCHED_PAGE)
 
-	fmt.Println(profile)
-	fmt.Println(len(profile.following))
-	fmt.Println(len(profile.ratings))
+		for _, username_following := range profile.following {
+			results <- username_following
+		}
+	}
 }
 
 func main() {
@@ -74,6 +90,18 @@ func main() {
 		return
 	}
 
-	first_profile := os.Args[1]
-	downloadProfile(first_profile)
+	const n_routines = 10
+	jobs := make(chan string, n_routines)
+	outs := make(chan string, 100)
+
+	for t := 0; t < n_routines; t++ {
+		goroutine_name := "gr" + strconv.Itoa(t)
+		go crawl(goroutine_name, jobs, outs)
+	}
+
+	jobs <- os.Args[1]
+	for {
+		flush_username := <-outs
+		jobs <- flush_username
+	}
 }
